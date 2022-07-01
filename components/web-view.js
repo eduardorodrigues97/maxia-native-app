@@ -7,9 +7,12 @@ import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
 
 export default function myWebView(webRef, url, setUrl) {
+    // URL change handler
     const onShouldStartLoadWithRequest = function(navigator) {
-        // INTERCEPT PDFs
+        // Set new URL to state
         setUrl(navigator.url);
+
+        // INTERCEPT PDFs
         if (navigator.url.slice(-4) == '.pdf') {
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
             WebBrowser.openBrowserAsync(navigator.url)
@@ -19,6 +22,7 @@ export default function myWebView(webRef, url, setUrl) {
         return true;
     }
     
+    // Return component
     return (
         <WebView 
         ref={webRef}

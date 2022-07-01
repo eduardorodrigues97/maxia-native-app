@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, StyleSheet, TextInput, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { Text, View, StyleSheet, TextInput } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
@@ -81,11 +81,35 @@ const LoginScreen = () => {
                 title={'Esqueceu sua senha?'}
                 titleStyle={{
                     color: '#afafaf',
-                    fontFamily: 'Default',
+                    fontFamily: 'Regular',
                     fontWeight: '400'
                 }}
                 buttonStyle={styles.forgotPasswordButtonStyle}
             />
+        </Card>
+        <Hr width={'90%'} margin={'5%'}/>
+        <Card containerStyle={styles.helpCard}>
+            <Text 
+                style={{
+                    color: '#fff',
+                    fontFamily: 'Bold',
+                    fontSize: 16,
+                    marginTop: 5
+                }}
+            >
+                Precisa de ajuda?
+            </Text>
+            <Text 
+                style={{
+                    color: '#6c757d',
+                    fontFamily: 'Regular',
+                    fontSize: 16,
+                    marginTop: 5,
+                    marginBottom: 15
+                }}
+            >
+                Contate nosso suporte
+            </Text>
         </Card>
     </View>
     )
@@ -109,15 +133,16 @@ const styles = StyleSheet.create({
         fontSize: 24,
         marginTop: 16,
         textAlign: 'center',
-        fontFamily: 'Default'
+        fontFamily: 'Medium'
     },
     logoText: {
         fontWeight: '500',
         color: '#009dcc',
         fontSize: 15,
-        marginTop: 16,
+        marginTop: 5,
+        marginBottom: 7,
         textAlign: 'center',
-        fontFamily: 'Default'
+        fontFamily: 'Medium'
     },
     loginText: {
         color: '#494949',
@@ -144,7 +169,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingHorizontal: 18,
         paddingVertical: 12,
-        fontFamily: 'Default'
+        fontFamily: 'Regular'
     },
     emailSenha: {
         fontWeight: '700',
@@ -187,6 +212,17 @@ const styles = StyleSheet.create({
         padding: 0,
         margin: 0
     },
+    helpCard: {
+        backgroundColor: "#6f2282",
+        borderRadius: 12,
+        borderWidth: 0,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 1, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        marginTop: 0
+    },
 
     // Buttons
     buttonStyle: {
@@ -205,7 +241,7 @@ const styles = StyleSheet.create({
         marginTop: 16,
         fontWeight: '500',
         marginBottom: 10,
-        fontFamily: 'Default'
+        fontFamily: 'Regular'
     },
     forgotPasswordButtonStyle: {
         backgroundColor: '#fff',

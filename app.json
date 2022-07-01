@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "MaxiaApp3",
-    "slug": "MaxiaApp3",
+    "name": "Maxia - Professor",
+    "slug": "maxia-native-teacher",
+    "owner": "Maxia-Education",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,16 +19,19 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.luizjosebp.maxiatesteprofessor"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.luizjosebp.maxiatesteprofessor"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

@@ -18,89 +18,77 @@ const Hr = () => {
     )
 }
 
-const loginScreen = () => {
+const LoginScreen = () => {
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{flex: 1, backgroundColor: '#f2f2f2'}}
-            keyboardVerticalOffset = {0}
-        >
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{
-                    justifyContent: 'center',
-                    alignContent: 'center'
-                }}
-            >
-                <View
-                    style={styles.container}
+    <View
+        style={{...styles.container}}
+    >
+        <Card containerStyle={styles.cardStyle}>
+            <View style={{alignItems: "center", justifyContent:"center"}}>
+                <SvgXml width="141" height="30" xml={styles.maxiaLogoSvg.xml} />
+                <Text
+                    style={styles.logoText}
                 >
-                    <Card containerStyle={styles.cardStyle}>
-                        <View style={{alignItems: "center", justifyContent:"center"}}>
-                            <SvgXml width="141" height="30" xml={styles.maxiaLogoSvg.xml} />
-                            <Text
-                                style={styles.logoText}
-                            >
-                                Inteligência Artificial
-                            </Text>
-                        </View>
-                    </Card>
-                    <Hr />
-                    <Card containerStyle={styles.cardStyle}>
-                        <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
-                            <Text
-                                style={styles.loginText}
-                            >
-                                Login
-                            </Text>
-                            <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
-                        </View>
-                        <Hr />
-                        <Card containerStyle={styles.loginCardStyle}>
-                            <Text
-                                style={styles.loginPleaseText}
-                            >
-                                Para continuar, efetue o login.
-                            </Text>
-                        </Card>
-                        <Card containerStyle={styles.textInputCard}>
-                            <Text style={styles.emailSenha}>Email</Text>
-                            <TextInput
-                                style={styles.textInputText}
-                                placeholder={'nome@email.com'}
-                                autoCapitalize='none'
-                            />
-                        </Card>
-                        <Card containerStyle={styles.textInputCard}>
-                            <Text style={styles.emailSenha}>Senha</Text>
-                            <TextInput
-                                style={styles.textInputText}
-                                placeholder={'Sua Senha'}
-                                autoCapitalize='none'
-                            />
-                        </Card>
-                        <Button 
-                            title={'CONFIRMAR'}
-                            titleStyle={{
-                                color: '#fff'
-                            }}
-                            buttonStyle={styles.buttonStyle}
-                        />
-                        <Button 
-                            title={'Esqueceu sua senha?'}
-                            titleStyle={{
-                                color: '#afafaf'
-                            }}
-                            buttonStyle={styles.forgotPasswordButtonStyle}
-                        />
-                    </Card>
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                    Inteligência Artificial
+                </Text>
+            </View>
+        </Card>
+        <Hr />
+        <Card containerStyle={styles.cardStyle}>
+            <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
+                <Text
+                    style={styles.loginText}
+                >
+                    Login
+                </Text>
+                <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
+            </View>
+            <Hr />
+            <Card containerStyle={styles.loginCardStyle}>
+                <Text
+                    style={styles.loginPleaseText}
+                >
+                    Para continuar, efetue o login.
+                </Text>
+            </Card>
+            <Card containerStyle={styles.textInputCard}>
+                <Text style={styles.emailSenha}>Email</Text>
+                <TextInput
+                    style={styles.textInputText}
+                    placeholder={'nome@email.com'}
+                    autoCapitalize='none'
+                />
+            </Card>
+            <Card containerStyle={styles.textInputCard}>
+                <Text style={styles.emailSenha}>Senha</Text>
+                <TextInput
+                    style={styles.textInputText}
+                    placeholder={'Sua Senha'}
+                    autoCapitalize='none'
+                />
+            </Card>
+            <Button 
+                title={'CONFIRMAR'}
+                titleStyle={{
+                    color: '#fff',
+                    fontFamily: 'Default'
+                }}
+                buttonStyle={styles.buttonStyle}
+            />
+            <Button 
+                title={'Esqueceu sua senha?'}
+                titleStyle={{
+                    color: '#afafaf',
+                    fontFamily: 'Default'
+                }}
+                buttonStyle={styles.forgotPasswordButtonStyle}
+            />
+        </Card>
+    </View>
     )
 }
 
-export default loginScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
     // Global Container
@@ -117,27 +105,31 @@ const styles = StyleSheet.create({
         color: '#afafaf',
         fontSize: 24,
         marginTop: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Default'
     },
     logoText: {
         fontWeight: '500',
         color: '#009dcc',
         fontSize: 15,
         marginTop: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Default'
     },
     loginText: {
         color: '#494949',
         fontSize: 30,
         fontWeight: 'bold',
         lineHeight: 37,
-        paddingRight: 10
+        paddingRight: 10,
+        fontFamily: 'Default'
     },
     loginPleaseText: {
         fontWeight: 'bold',
         color: '#636464',
         fontSize: 16,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'Default'
     },
     textInputText: {
         fontWeight: '500',
@@ -148,7 +140,8 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 12,
         paddingHorizontal: 18,
-        paddingVertical: 12
+        paddingVertical: 12,
+        fontFamily: 'Default'
     },
     emailSenha: {
         fontWeight: '700',
@@ -156,7 +149,8 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 16,
         textAlign: 'left',
-        padding: 0
+        padding: 0,
+        fontFamily: 'Default'
     },
 
     // Cards
@@ -207,7 +201,8 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         width: '90%',
         marginLeft: '5%',
-        marginBottom: 10
+        marginBottom: 10,
+        fontFamily: 'Default'
     },
     forgotPasswordButtonStyle: {
         backgroundColor: '#fff',

@@ -2,7 +2,6 @@
   "expo": {
     "name": "Maxia - Professor",
     "slug": "maxia-native-teacher",
-    "owner": "Maxia-Education",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

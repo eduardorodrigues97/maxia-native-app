@@ -1,3 +1,5 @@
+// https://github.com/eduardorodrigues97/maxia-native-app
+
 import React, { useRef } from 'react';
 import { Text, View, Button, Image, Dimensions } from 'react-native';
 import { WebView } from 'react-native-webview';
@@ -10,7 +12,7 @@ import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 
 function ScreenOrientationLockExample() {
-    const [lockInfo, lockError] = useScreenOrientationLock(OrientationLock.PORTRAIT);
+    const [lockInfo, lockError] = useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
 
     return (
         <View>
@@ -21,7 +23,6 @@ function ScreenOrientationLockExample() {
         </View>
     );
 }
-
 
 var started = false;
 var webRef =  null;

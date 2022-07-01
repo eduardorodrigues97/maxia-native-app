@@ -6,6 +6,7 @@ import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
+import { Asset } from 'expo-asset';
 import {useNetInfo} from "@react-native-community/netinfo";
 import bot2 from './assets/bot2.png'; 
 import { OrientationLock } from 'expo-screen-orientation';
@@ -33,6 +34,8 @@ export default function App() {
   netInfo = useNetInfo();
   webRef = useRef(null);
 
+  Asset.fromModule(bot2).downloadAsync()
+  
   let myWebView = (
     <WebView 
       ref={webRef}

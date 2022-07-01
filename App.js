@@ -38,8 +38,8 @@ export default function App() {
       ref={webRef}
       style={styles.container}
       source={{ uri: last_uri }}
-      onShouldStartLoadWithRequest={this.onShouldStartLoadWithRequest} //for iOS
-      onNavigationStateChange ={this.onShouldStartLoadWithRequest} //for Android
+      onShouldStartLoadWithRequest={onShouldStartLoadWithRequest} //for iOS
+      onNavigationStateChange ={onShouldStartLoadWithRequest} //for Android
     />
   )
 

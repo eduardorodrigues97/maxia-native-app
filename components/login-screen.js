@@ -4,16 +4,17 @@ import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
 
-const Hr = () => {
+const Hr = (props) => {
     return (
         <View style={{
-            borderBottomColor: '#6c757d',
-            borderBottomWidth: StyleSheet.hairlineWidth,
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            opacity: 0.2,
             marginTop: 16,
             marginBottom: 16,
             padding: 0,
-            width: '90%',
-            marginLeft: '5%'
+            width: props.width,
+            marginLeft: props.margin
         }}></View>
     )
 }
@@ -33,7 +34,7 @@ const LoginScreen = () => {
                 </Text>
             </View>
         </Card>
-        <Hr />
+        <Hr width={'90%'} margin={'5%'}/>
         <Card containerStyle={styles.cardStyle}>
             <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
                 <Text
@@ -43,7 +44,7 @@ const LoginScreen = () => {
                 </Text>
                 <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
             </View>
-            <Hr />
+            <Hr width={'100%'} margin={'0%'}/>
             <Card containerStyle={styles.loginCardStyle}>
                 <Text
                     style={styles.loginPleaseText}
@@ -71,7 +72,8 @@ const LoginScreen = () => {
                 title={'CONFIRMAR'}
                 titleStyle={{
                     color: '#fff',
-                    fontFamily: 'Default'
+                    fontFamily: 'Bold',
+                    fontWeight: '400'
                 }}
                 buttonStyle={styles.buttonStyle}
             />
@@ -79,7 +81,8 @@ const LoginScreen = () => {
                 title={'Esqueceu sua senha?'}
                 titleStyle={{
                     color: '#afafaf',
-                    fontFamily: 'Default'
+                    fontFamily: 'Default',
+                    fontWeight: '400'
                 }}
                 buttonStyle={styles.forgotPasswordButtonStyle}
             />
@@ -122,14 +125,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         lineHeight: 37,
         paddingRight: 10,
-        fontFamily: 'Default'
+        fontFamily: 'Bold'
     },
     loginPleaseText: {
         fontWeight: 'bold',
         color: '#636464',
         fontSize: 16,
         textAlign: 'center',
-        fontFamily: 'Default'
+        fontFamily: 'Bold'
     },
     textInputText: {
         fontWeight: '500',
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
         marginTop: 16,
         textAlign: 'left',
         padding: 0,
-        fontFamily: 'Default'
+        fontFamily: 'Bold'
     },
 
     // Cards
@@ -181,14 +184,16 @@ const styles = StyleSheet.create({
         borderWidth: 0,
         borderColor: '#fdfdfe',
         shadowOpacity: 0,
-        padding: 0
+        padding: 0,
+        margin: 0
     },
 
     // Buttons
     buttonStyle: {
         backgroundColor: '#009dcc',
         borderRadius: 20,
-        paddingVertical: 14,
+        paddingTop: 14,
+        paddingBottom: 11,
         borderColor: '#009dcc',
         textAlign: 'center',
         shadowColor: '#0087b1',
@@ -199,8 +204,6 @@ const styles = StyleSheet.create({
         fontSize: 16,
         marginTop: 16,
         fontWeight: '500',
-        width: '90%',
-        marginLeft: '5%',
         marginBottom: 10,
         fontFamily: 'Default'
     },
@@ -213,8 +216,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         paddingBottom: 0,
         fontWeight: '400',
-        width: '90%',
-        marginLeft: '5%',
         marginBottom: 10
     },
 

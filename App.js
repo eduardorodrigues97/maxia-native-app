@@ -13,7 +13,10 @@ import {KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 export default function App() {
     // Load Fonts
     const [loaded] = useFonts({
-        Default: require('./assets/fonts/Default.ttf'),
+        Light: require('./assets/fonts/DINNextRoundedLTPro-Light.ttf'),
+        Medium: require('./assets/fonts/DINNextRoundedLTPro-Medium.ttf'),
+        Regular: require('./assets/fonts/DINNextRoundedLTPro-Regular.ttf'),
+        Bold: require('./assets/fonts/DINNextRoundedLTPro-Bold.ttf'),
     });
     
     // Lock screen rotation

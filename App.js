@@ -63,7 +63,7 @@ export default function App() {
   );
 }
 
-onShouldStartLoadWithRequest = function(navigator) {
+const onShouldStartLoadWithRequest = function(navigator) {
   // INTERCEPT PDFs
   last_uri = navigator.url
   if (navigator.url.slice(-4) == '.pdf') {

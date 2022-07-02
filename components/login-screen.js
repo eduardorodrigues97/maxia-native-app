@@ -1,5 +1,5 @@
 // import React from "react";
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
@@ -31,162 +31,187 @@ async function save(key, value) {
 }
 
 let usersTable = {
-    'eduardo.rodrigues@maxia.education': 'senha'
+    'eduardo.rodrigues': 'senha'
 }
 
-async function authenticationRequest() {
-    try {
-        let email = await SecureStore.getItemAsync('email');
-        let password = await SecureStore.getItemAsync('password');
-        if (email in usersTable) {
-            if (usersTable[email] === password)
-                return true
-        }
-        return false
-    } catch (error) {
-        console.log(error);
-        return false
-    }
-}
-
-const LoginScreen = (props) => {
+export default function LoginScreen({ navigation }) {
     // Set states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loginStatus, setLoginStatus] = useState('Para continuar, efetue o login.');
 
     // Set Refs
     const emailInput = useRef();
     const passwordInput = useRef();
 
     // Define auxiliary functions
+    async function authenticationRequest() {
+        try {
+            let email = await SecureStore.getItemAsync('email');
+            let password = await SecureStore.getItemAsync('password');
+            if (email in usersTable) {
+                if (usersTable[email] === password) {
+                    setLoginStatus("Para continuar, efetue o login.")
+                    navigation.navigate('MainApp');
+                }
+                else {
+                    // Username exists, but wrong password
+                    setLoginStatus("Senha errada.")
+                }
+            } else {
+                // Username does not exist
+                setLoginStatus("Email não encontrado.")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const authenticate = () => {
         save('email', email)
         save('password', password)
-        // authenticationRequest()
+        authenticationRequest()
         return
     }
 
+    // Try to authenticate right away, before rendering the very first time
+    useEffect(() => {
+        authenticationRequest()
+    }, [])
+
     // Component
     return (
-    <View
-        style={{...styles.container}}
+    <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{flex: 1, backgroundColor: '#f2f2f2'}}
+        keyboardVerticalOffset = {0}
     >
-        <Card containerStyle={styles.cardStyle}>
-            <View style={{alignItems: "center", justifyContent:"center"}}>
-                <SvgXml width="141" height="30" xml={styles.maxiaLogoSvg.xml} />
-                <Text
-                    style={styles.logoText}
-                >
-                    Inteligência Artificial
-                </Text>
-            </View>
-        </Card>
-        <Hr width={'90%'} margin={'5%'}/>
-        <Card containerStyle={styles.cardStyle}>
-            <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
-                <Text
-                    style={styles.loginText}
-                >
-                    Login
-                </Text>
-                <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
-            </View>
-            <Hr width={'100%'} margin={'0%'}/>
-            <Card containerStyle={styles.loginCardStyle}>
-                <Text
-                    style={styles.loginPleaseText}
-                >
-                    Para continuar, efetue o login.
-                </Text>
-            </Card>
-            <Card containerStyle={styles.textInputCard}>
-                <Text style={styles.emailSenha}>Email</Text>
-                <TextInput
-                    style={styles.textInputText}
-                    placeholder={'nome@email.com'}
-                    placeholderTextColor={'#afafaf'}
-                    autoCapitalize={'none'}
-                    autoComplete={'email'}
-                    autoCorrect={false}
-                    autoFocus={true}
-                    selectTextOnFocus={true}
-                    keyboardType={'email-address'}
-                    returnKeyType={'next'}
-                    onSubmitEditing={() => passwordInput.current.focus()}
-                    onChangeText={(value) => setEmail(value)}
-
-                    // onSubmitEditing Check for mistypes and focus the password
-                    // onEndEditing Check mistypes
-                    blurOnSubmit={false}
-
-                    ref={emailInput}
-                />
-            </Card>
-            <Card containerStyle={styles.textInputCard}>
-                <Text style={styles.emailSenha}>Senha</Text>
-                <TextInput
-                    style={styles.textInputText}
-                    placeholder={'Sua Senha'}
-                    placeholderTextColor={'#afafaf'}
-                    autoCapitalize='none'
-                    secureTextEntry={true}
-                    selectTextOnFocus={true}
-                    returnKeyType={'done'}
-                    onSubmitEditing={() => authenticate()}
-                    onChangeText={(value) => setPassword(value)}
-
-                    ref={passwordInput}
-                />
-            </Card>
-            <Button 
-                title={'CONFIRMAR'}
-                titleStyle={{
-                    color: '#fff',
-                    fontFamily: 'Bold',
-                    fontWeight: '400'
-                }}
-                buttonStyle={styles.buttonStyle}
-                onPress={authenticate}
-            />
-            <Button 
-                title={'Esqueceu sua senha?'}
-                titleStyle={{
-                    color: '#afafaf',
-                    fontFamily: 'Regular',
-                    fontWeight: '400'
-                }}
-                buttonStyle={styles.forgotPasswordButtonStyle}
-            />
-        </Card>
-        <Hr width={'90%'} margin={'5%'}/>
-        <Card containerStyle={styles.helpCard}>
-            <Text 
-                style={{
-                    color: '#fff',
-                    fontFamily: 'Bold',
-                    fontSize: 16,
-                    marginTop: 5
-                }}
+        <ScrollView
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+                justifyContent: 'center',
+                alignContent: 'center'
+            }}
+        >
+            <View
+                style={{...styles.container}}
             >
-                Precisa de ajuda?
-            </Text>
-            <Text 
-                style={{
-                    color: '#6c757d',
-                    fontFamily: 'Regular',
-                    fontSize: 16,
-                    marginTop: 5,
-                    marginBottom: 15
-                }}
-            >
-                Contate nosso suporte
-            </Text>
-        </Card>
-    </View>
+                <Card containerStyle={styles.cardStyle}>
+                    <View style={{alignItems: "center", justifyContent:"center"}}>
+                        <SvgXml width="141" height="30" xml={styles.maxiaLogoSvg.xml} />
+                        <Text
+                            style={styles.logoText}
+                        >
+                            Inteligência Artificial
+                        </Text>
+                    </View>
+                </Card>
+                <Hr width={'90%'} margin={'5%'}/>
+                <Card containerStyle={styles.cardStyle}>
+                    <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
+                        <Text
+                            style={styles.loginText}
+                        >
+                            Login
+                        </Text>
+                        <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
+                    </View>
+                    <Hr width={'100%'} margin={'0%'}/>
+                    <Card containerStyle={styles.loginCardStyle}>
+                        <Text
+                            style={styles.loginPleaseText}
+                        >
+                            {loginStatus}
+                        </Text>
+                    </Card>
+                    <Card containerStyle={styles.textInputCard}>
+                        <Text style={styles.emailSenha}>Email</Text>
+                        <TextInput
+                            style={styles.textInputText}
+                            placeholder={'nome@email.com'}
+                            placeholderTextColor={'#afafaf'}
+                            autoCapitalize={'none'}
+                            autoComplete={'email'}
+                            autoCorrect={false}
+                            autoFocus={true}
+                            selectTextOnFocus={true}
+                            keyboardType={'email-address'}
+                            returnKeyType={'next'}
+                            onSubmitEditing={() => passwordInput.current.focus()}
+                            onChangeText={(value) => setEmail(value)}
+
+                            // onSubmitEditing Check for mistypes and focus the password
+                            // onEndEditing Check mistypes
+                            blurOnSubmit={false}
+
+                            ref={emailInput}
+                        />
+                    </Card>
+                    <Card containerStyle={styles.textInputCard}>
+                        <Text style={styles.emailSenha}>Senha</Text>
+                        <TextInput
+                            style={styles.textInputText}
+                            placeholder={'Sua Senha'}
+                            placeholderTextColor={'#afafaf'}
+                            autoCapitalize='none'
+                            secureTextEntry={true}
+                            selectTextOnFocus={true}
+                            returnKeyType={'done'}
+                            onSubmitEditing={() => authenticate()}
+                            onChangeText={(value) => setPassword(value)}
+
+                            ref={passwordInput}
+                        />
+                    </Card>
+                    <Button 
+                        title={'CONFIRMAR'}
+                        titleStyle={{
+                            color: '#fff',
+                            fontFamily: 'Bold',
+                            fontWeight: '400'
+                        }}
+                        buttonStyle={styles.buttonStyle}
+                        onPress={authenticate}
+                    />
+                    <Button 
+                        title={'Esqueceu sua senha?'}
+                        titleStyle={{
+                            color: '#afafaf',
+                            fontFamily: 'Regular',
+                            fontWeight: '400'
+                        }}
+                        buttonStyle={styles.forgotPasswordButtonStyle}
+                    />
+                </Card>
+                <Hr width={'90%'} margin={'5%'}/>
+                <Card containerStyle={styles.helpCard}>
+                    <Text 
+                        style={{
+                            color: '#fff',
+                            fontFamily: 'Bold',
+                            fontSize: 16,
+                            marginTop: 5
+                        }}
+                    >
+                        Precisa de ajuda?
+                    </Text>
+                    <Text 
+                        style={{
+                            color: '#6c757d',
+                            fontFamily: 'Regular',
+                            fontSize: 16,
+                            marginTop: 5,
+                            marginBottom: 15
+                        }}
+                    >
+                        Contate nosso suporte
+                    </Text>
+                </Card>
+            </View>
+        </ScrollView>
+    </KeyboardAvoidingView>
     )
 }
-
-export { LoginScreen, authenticationRequest };
 
 const styles = StyleSheet.create({
     // Global Container

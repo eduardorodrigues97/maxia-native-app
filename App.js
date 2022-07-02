@@ -5,10 +5,15 @@ import { useNetInfo } from "@react-native-community/netinfo";
 import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import OfflineScreen from './components/offline-screen';
-import myWebView from './components/web-view';
-import { LoginScreen, authenticationRequest } from './components/login-screen';
+import MyWebView from './components/web-view';
+import LoginScreen from './components/login-screen';
 import { useFonts } from 'expo-font';
-import {KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+
+// Import Navigators from React Navigation
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 export default function App() {
     // Load Fonts
@@ -22,12 +27,6 @@ export default function App() {
     // Lock screen rotation
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
 
-    // Define states
-    const [url, setUrl] = useState('http://teste.maxia.education/');
-
-    // Define refs
-    webRef = useRef(null);
-
     // Get Net Info
     netInfo = useNetInfo();
 
@@ -36,37 +35,42 @@ export default function App() {
         return null;
     }
 
-    if (netInfo.isConnected === true){
-        return myWebView(webRef, url, setUrl)
-    }
-
-    if (authenticationRequest()){
-        return myWebView(webRef, url, setUrl)
+    if (netInfo.isConnected === false){
+        return OfflineScreen()
     }
 
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={{flex: 1, backgroundColor: '#f2f2f2'}}
-            keyboardVerticalOffset = {0}
-        >
-            <ScrollView
-                keyboardShouldPersistTaps="handled"
-                contentContainerStyle={{
-                    justifyContent: 'center',
-                    alignContent: 'center'
-                }}
-            >
-                <LoginScreen />
-            </ScrollView>
-        </KeyboardAvoidingView>
-    )
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="SplashScreen">
+            {/* Auth Navigator: Include Login and Signup */}
+            <Stack.Screen
+              name="LoginScreen"
+              component={LoginScreen}
+              options={{headerShown: false}}
+            />
+            {/* Navigation Drawer as a landing page */}
+            <Stack.Screen
+              name="MainApp"
+              component={MyWebView}
+              // Hiding header for Navigation Drawer
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      );
+
+    if (netInfo.isConnected === false){
+        return OfflineScreen()
+    }
+
+    if (authenticationRequest() === true){
+        return myWebView(webRef, url, setUrl)
+    }
+
 
     // Main application components rendering
     // If there is connection, render the WebView
     if (netInfo.isConnected === true){
         return myWebView(webRef, url, setUrl)
     }
-    // Else, render the offlineScreen
-    return OfflineScreen()
 }

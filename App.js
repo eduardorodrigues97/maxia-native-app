@@ -1,17 +1,17 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
-import { React, useRef, useState } from 'react';
+import { React } from 'react';
 import { useNetInfo } from "@react-native-community/netinfo";
 import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import { useFonts } from 'expo-font';
-import { LogBox, StatusBar } from 'react-native';
+import { Asset } from 'expo-asset';
 
 // Component imports
 import OfflineScreen from './components/offline-screen';
 import MyWebView from './components/web-view';
 import LoginScreen from './components/login-screen';
-// import LoadingScreen from './components/transitionScreens/loading-screen';
+import sadBot from './assets/sad-bot.png';
 
 
 // Import Navigators from React Navigation
@@ -20,18 +20,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
 
-// Ignore useless warnings
-const ignoreWarns = [
-  "ViewPropTypes will be removed"
-];
-const warn = console.warn;
-console.warn = (...arg) => {
-  for (let i = 0; i < ignoreWarns.length; i++) {
-      if (arg[0].startsWith(ignoreWarns[i])) ;
-  }
-  warn(...arg);
-};
-LogBox.ignoreLogs(ignoreWarns);
 
 export default function App() {
     // Load Fonts
@@ -41,6 +29,9 @@ export default function App() {
         Regular: require('./assets/fonts/DINNextRoundedLTPro-Regular.ttf'),
         Bold: require('./assets/fonts/DINNextRoundedLTPro-Bold.ttf'),
     });
+
+    // Load background assets that can be loaded on background
+    Asset.fromModule(sadBot).downloadAsync()
     
     // Lock screen rotation
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
@@ -82,20 +73,5 @@ export default function App() {
                 /> */}
             </Stack.Navigator>
         </NavigationContainer>
-      );
-
-    if (netInfo.isConnected === false){
-        return OfflineScreen()
-    }
-
-    if (authenticationRequest() === true){
-        return myWebView(webRef, url, setUrl)
-    }
-
-
-    // Main application components rendering
-    // If there is connection, render the WebView
-    if (netInfo.isConnected === true){
-        return myWebView(webRef, url, setUrl)
-    }
+    );
 }

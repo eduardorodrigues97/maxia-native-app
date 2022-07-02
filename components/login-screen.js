@@ -6,6 +6,7 @@ import { SvgXml } from 'react-native-svg';
 import { React, useRef, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import usersTable from '../sensitiveData/usersTable.json';
+import Splash from './transitionScreens/splash-screen';
 
 const Hr = (props) => {
     return (
@@ -36,6 +37,7 @@ export default function LoginScreen({ navigation }) {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loginStatus, setLoginStatus] = useState('Para continuar, efetue o login.');
+    const [status, setStatus] = useState(false);
 
     // Set Refs
     const emailInput = useRef();
@@ -53,14 +55,17 @@ export default function LoginScreen({ navigation }) {
                 }
                 else {
                     // Username exists, but wrong password
-                    setLoginStatus("Senha errada.")
+                    setLoginStatus("Senha errada.");
+                    setStatus(true);
                 }
             } else {
                 // Username does not exist
                 setLoginStatus("Email não encontrado.")
+                setStatus(true);
             }
         } catch (error) {
             console.log(error);
+            setStatus(true);
         }
     }
 
@@ -73,8 +78,14 @@ export default function LoginScreen({ navigation }) {
 
     // Try to authenticate right away, before rendering the very first time
     useEffect(() => {
-        authenticationRequest()
-    }, [])
+        setTimeout(() => {
+            authenticationRequest();
+        }, 2000);
+    })
+
+    if (!status) {
+        return <Splash />
+    }
 
     // Component
     return (

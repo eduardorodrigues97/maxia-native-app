@@ -1,9 +1,9 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
-import { React, useRef, useState } from 'react';
+import { React, useRef, useState, useEffect } from 'react';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
-import { StyleSheet, Dimensions, View } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import Loading from './transitionScreens/loading-screen';
@@ -13,11 +13,13 @@ export default function MyWebView( { navigation } ) {
     // Define states
     const [url, setUrl] = useState('http://teste.maxia.education/users/sign_in');
     const [javascriptInjection, setJavascriptInjection] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const dimensions = Dimensions.get('window');
 
     // Define refs
     webRef = useRef(null);
 
+    // Helper functions
     // URL change handler
     const onShouldStartLoadWithRequest = function(navigator) {
         // Set new URL to state
@@ -43,6 +45,7 @@ export default function MyWebView( { navigation } ) {
         return true;
     }
 
+    // Async getter for authetication
     SecureStore.getItemAsync('email').then((tokenEmail) => {
         SecureStore.getItemAsync('password').then((tokenPassword) => {
             //console.log(tokenEmail)
@@ -63,20 +66,28 @@ export default function MyWebView( { navigation } ) {
             }
         })
     })
-    
+
+    // Define Effects
+    useEffect(() => {
+        if (!(
+            url === 'http://teste.maxia.education/users/sign_in' ||
+            url === 'http://teste.maxia.education/'
+        )) {
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 2000);
+        };
+    }, [url]);
+
+    // Only render main component when javascriptInjection is ready
     if (javascriptInjection === '') {
         return null
     }
 
-    const returnLoadingScreen = (
-        url==='http://teste.maxia.education/users/sign_in' ||
-        url==='http://teste.maxia.education/'
-    )
-
     // Return component
     return (
         <>
-            {returnLoadingScreen && <Loading 
+            {isLoading && <Loading 
             style={{
                 ...styles.container,
                 height: dimensions.height,
@@ -86,7 +97,7 @@ export default function MyWebView( { navigation } ) {
                 ref={webRef}
                 style={{
                     ...styles.container,
-                    display: returnLoadingScreen ? 'block':'block'
+                    display: isLoading ? 'none':'block'
                 }}
                 source={{ 
                     uri: url,

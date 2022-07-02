@@ -4,13 +4,9 @@ import React from 'react';
 import { Text, View, Image, Dimensions } from 'react-native';
 import { StyleSheet } from 'react-native';
 import Constants from 'expo-constants';
-import { Asset } from 'expo-asset';
 import sadBot from '../assets/sad-bot.png'; 
 
 export default function OfflineScreen() {
-    // Load bot image async (to work with no internet connection)
-    Asset.fromModule(sadBot).downloadAsync()
-
     // Define dimensions
     const dimensions = Dimensions.get('window');
     const robotWidth = Math.round(dimensions.width*0.3);

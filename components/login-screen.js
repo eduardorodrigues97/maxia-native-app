@@ -1,8 +1,10 @@
-import React from "react";
+// import React from "react";
 import { Text, View, StyleSheet, TextInput } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
+import { React, useRef, useState, useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
 const Hr = (props) => {
     return (
@@ -19,7 +21,52 @@ const Hr = (props) => {
     )
 }
 
-const LoginScreen = () => {
+async function save(key, value) {
+    try {
+        await SecureStore.setItemAsync(key, value);
+        console.log('Saved succesfully')
+    } catch (error) {
+        console.log('Could not save variable')
+    }
+}
+
+let usersTable = {
+    'eduardo.rodrigues@maxia.education': 'senha'
+}
+
+async function authenticationRequest() {
+    try {
+        let email = await SecureStore.getItemAsync('email');
+        let password = await SecureStore.getItemAsync('password');
+        if (email in usersTable) {
+            if (usersTable[email] === password)
+                return true
+        }
+        return false
+    } catch (error) {
+        console.log(error);
+        return false
+    }
+}
+
+const LoginScreen = (props) => {
+    // Set states
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    // Set Refs
+    const emailInput = useRef();
+    const passwordInput = useRef();
+
+    // Define auxiliary functions
+    const authenticate = () => {
+        save('email', email)
+        save('password', password)
+        // authenticationRequest()
+        return
+    }
+
+    // Component
     return (
     <View
         style={{...styles.container}}
@@ -57,7 +104,22 @@ const LoginScreen = () => {
                 <TextInput
                     style={styles.textInputText}
                     placeholder={'nome@email.com'}
-                    autoCapitalize='none'
+                    placeholderTextColor={'#afafaf'}
+                    autoCapitalize={'none'}
+                    autoComplete={'email'}
+                    autoCorrect={false}
+                    autoFocus={true}
+                    selectTextOnFocus={true}
+                    keyboardType={'email-address'}
+                    returnKeyType={'next'}
+                    onSubmitEditing={() => passwordInput.current.focus()}
+                    onChangeText={(value) => setEmail(value)}
+
+                    // onSubmitEditing Check for mistypes and focus the password
+                    // onEndEditing Check mistypes
+                    blurOnSubmit={false}
+
+                    ref={emailInput}
                 />
             </Card>
             <Card containerStyle={styles.textInputCard}>
@@ -65,7 +127,15 @@ const LoginScreen = () => {
                 <TextInput
                     style={styles.textInputText}
                     placeholder={'Sua Senha'}
+                    placeholderTextColor={'#afafaf'}
                     autoCapitalize='none'
+                    secureTextEntry={true}
+                    selectTextOnFocus={true}
+                    returnKeyType={'done'}
+                    onSubmitEditing={() => authenticate()}
+                    onChangeText={(value) => setPassword(value)}
+
+                    ref={passwordInput}
                 />
             </Card>
             <Button 
@@ -76,6 +146,7 @@ const LoginScreen = () => {
                     fontWeight: '400'
                 }}
                 buttonStyle={styles.buttonStyle}
+                onPress={authenticate}
             />
             <Button 
                 title={'Esqueceu sua senha?'}
@@ -115,7 +186,7 @@ const LoginScreen = () => {
     )
 }
 
-export default LoginScreen;
+export { LoginScreen, authenticationRequest };
 
 const styles = StyleSheet.create({
     // Global Container
@@ -161,7 +232,7 @@ const styles = StyleSheet.create({
     },
     textInputText: {
         fontWeight: '500',
-        color: '#afafaf',
+        color: '#494949',
         fontSize: 16,
         textAlign: 'left',
         borderColor: '#009dcc',
@@ -169,7 +240,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingHorizontal: 18,
         paddingVertical: 12,
-        fontFamily: 'Regular'
+        fontFamily: 'Medium'
     },
     emailSenha: {
         fontWeight: '700',

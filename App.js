@@ -6,7 +6,7 @@ import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import OfflineScreen from './components/offline-screen';
 import myWebView from './components/web-view';
-import LoginScreen from './components/login-screen';
+import { LoginScreen, authenticationRequest } from './components/login-screen';
 import { useFonts } from 'expo-font';
 import {KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 
@@ -34,6 +34,14 @@ export default function App() {
     // If the fonts are not yet loaded, return without rendering
     if (!loaded) {
         return null;
+    }
+
+    if (netInfo.isConnected === true){
+        return myWebView(webRef, url, setUrl)
+    }
+
+    if (authenticationRequest()){
+        return myWebView(webRef, url, setUrl)
     }
 
     return (

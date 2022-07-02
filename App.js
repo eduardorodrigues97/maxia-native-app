@@ -4,16 +4,34 @@ import { React, useRef, useState } from 'react';
 import { useNetInfo } from "@react-native-community/netinfo";
 import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
+import { useFonts } from 'expo-font';
+import { LogBox, StatusBar } from 'react-native';
+
+// Component imports
 import OfflineScreen from './components/offline-screen';
 import MyWebView from './components/web-view';
 import LoginScreen from './components/login-screen';
-import { useFonts } from 'expo-font';
+// import LoadingScreen from './components/transitionScreens/loading-screen';
+
 
 // Import Navigators from React Navigation
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
+
+// Ignore useless warnings
+const ignoreWarns = [
+  "ViewPropTypes will be removed"
+];
+const warn = console.warn;
+console.warn = (...arg) => {
+  for (let i = 0; i < ignoreWarns.length; i++) {
+      if (arg[0].startsWith(ignoreWarns[i])) ;
+  }
+  warn(...arg);
+};
+LogBox.ignoreLogs(ignoreWarns);
 
 export default function App() {
     // Load Fonts
@@ -41,21 +59,28 @@ export default function App() {
 
     return (
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="SplashScreen">
-            {/* Auth Navigator: Include Login and Signup */}
-            <Stack.Screen
-              name="LoginScreen"
-              component={LoginScreen}
-              options={{headerShown: false}}
-            />
-            {/* Navigation Drawer as a landing page */}
-            <Stack.Screen
-              name="MainApp"
-              component={MyWebView}
-              // Hiding header for Navigation Drawer
-              options={{headerShown: false}}
-            />
-          </Stack.Navigator>
+            <Stack.Navigator initialRouteName="LoginScreen">
+                {/* Auth Navigator: Include Login and Signup */}
+                <Stack.Screen
+                name="LoginScreen"
+                component={LoginScreen}
+                options={{headerShown: false}}
+                />
+                {/* Navigation Drawer as a landing page */}
+                <Stack.Screen
+                name="MainApp"
+                component={MyWebView}
+                // Hiding header for Navigation Drawer
+                options={{headerShown: false}}
+                />
+                {/* Loading Page */}
+                {/* <Stack.Screen
+                name="LoadingScreen"
+                component={LoadingScreen}
+                // Hiding header for Navigation Drawer
+                options={{headerShown: false}}
+                /> */}
+            </Stack.Navigator>
         </NavigationContainer>
       );
 

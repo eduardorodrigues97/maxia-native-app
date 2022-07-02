@@ -5,6 +5,7 @@ import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
 import { React, useRef, useState, useEffect } from 'react';
 import * as SecureStore from 'expo-secure-store';
+import usersTable from '../sensitiveData/usersTable.json';
 
 const Hr = (props) => {
     return (
@@ -28,10 +29,6 @@ async function save(key, value) {
     } catch (error) {
         console.log('Could not save variable')
     }
-}
-
-let usersTable = {
-    'eduardo.rodrigues': 'senha'
 }
 
 export default function LoginScreen({ navigation }) {

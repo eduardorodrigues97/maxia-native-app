@@ -53,7 +53,7 @@ const Main = () => {
     const [auth, setAuth] = useContext(AuthContext);
 
     // Get Net Info
-    netInfo = useNetInfo();
+    let netInfo = useNetInfo();
 
     // Auth Checker
     const checkAuthentication = async (token) => {

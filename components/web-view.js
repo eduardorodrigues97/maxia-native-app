@@ -10,7 +10,7 @@ import Loading from './transitionScreens/loading-screen';
 import { CommonActions } from '@react-navigation/native';
 
 
-export default function MyWebView() {
+export default function MyWebView({navigation}) {
     // Define states
     const [url, setUrl] = useState('http://teste.maxia.education/users/sign_in');
     const [javascriptInjection, setJavascriptInjection] = useState('');

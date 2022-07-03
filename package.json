@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-community/cookies": "^5.0.1",
     "@react-native-community/netinfo": "8.2.0",
+    "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/stack": "^6.2.1",
     "@rneui/themed": "^4.0.0-rc.5",
@@ -30,6 +31,7 @@
     "react-dom": "17.0.2",
     "react-native": "0.68.2",
     "react-native-elements": "^3.4.2",
+    "react-native-select-dropdown": "^2.0.4",
     "react-native-svg": "^12.3.0",
     "react-native-svg-uri": "^1.2.3",
     "react-native-web": "0.17.7",

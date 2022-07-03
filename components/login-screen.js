@@ -51,7 +51,8 @@ export default function LoginScreen({ navigation }) {
             if (email in usersTable) {
                 if (usersTable[email] === password) {
                     setLoginStatus("Para continuar, efetue o login.")
-                    navigation.navigate('MainApp');
+                    setStatus(true);
+                    navigation.navigate('MainNativeApp');
                 }
                 else {
                     // Username exists, but wrong password
@@ -60,7 +61,8 @@ export default function LoginScreen({ navigation }) {
                 }
             } else {
                 // Username does not exist
-                setLoginStatus("Email não encontrado.")
+                if (email && email.length > 0)
+                    setLoginStatus("Email não encontrado.")
                 setStatus(true);
             }
         } catch (error) {
@@ -80,7 +82,7 @@ export default function LoginScreen({ navigation }) {
     useEffect(() => {
         setTimeout(() => {
             authenticationRequest();
-        }, 2000);
+        }, 4000);
     })
 
     if (!status) {

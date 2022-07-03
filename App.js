@@ -11,7 +11,11 @@ import { Asset } from 'expo-asset';
 import OfflineScreen from './components/offline-screen';
 import MyWebView from './components/web-view';
 import LoginScreen from './components/login-screen';
+import MainApp from './components/main-app';
+
+// Images
 import sadBot from './assets/sad-bot.png';
+import infantil from './assets/home-screen/infantil.svg'
 
 
 // Import Navigators from React Navigation
@@ -32,6 +36,7 @@ export default function App() {
 
     // Load background assets that can be loaded on background
     Asset.fromModule(sadBot).downloadAsync()
+    Asset.fromModule(infantil).downloadAsync()
     
     // Lock screen rotation
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
@@ -59,18 +64,18 @@ export default function App() {
                 />
                 {/* Navigation Drawer as a landing page */}
                 <Stack.Screen
-                name="MainApp"
+                name="MainWebApp"
                 component={MyWebView}
                 // Hiding header for Navigation Drawer
                 options={{headerShown: false}}
                 />
-                {/* Loading Page */}
-                {/* <Stack.Screen
-                name="LoadingScreen"
-                component={LoadingScreen}
+                {/* Home page */}
+                <Stack.Screen
+                name="MainNativeApp"
+                component={MainApp}
                 // Hiding header for Navigation Drawer
                 options={{headerShown: false}}
-                /> */}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

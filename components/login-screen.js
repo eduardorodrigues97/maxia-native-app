@@ -5,7 +5,6 @@ import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
 import { React, useRef, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import usersTable from '../sensitiveData/usersTable.json';
 import { AuthContext } from './auth-context'
 // import Splash from './transitionScreens/splash-screen';
 
@@ -50,24 +49,27 @@ export default function LoginScreen({navigation}) {
         try {
             let email = await SecureStore.getItemAsync('email');
             let password = await SecureStore.getItemAsync('password');
-            if (email in usersTable) {
-                if (usersTable[email] === password) {
-                    setLoginStatus("Para continuar, efetue o login.")
-                    setStatus(true);
-                }
-                else {
+            setStatus(true);
+            setAuth(true);
+            setLoginStatus("Para continuar, efetue o login.")
+            // if (email in usersTable) {
+            //     if (usersTable[email] === password) {
+            //         setLoginStatus("Para continuar, efetue o login.")
+            //         setStatus(true);
+            //     }
+            //     else {
                     // Username exists, but wrong password
-                    setLoginStatus("Senha errada.");
-                    setStatus(true);
-                }
-                setAuth(true);
-            } else {
-                // Username does not exist
-                if (email && email.length > 0)
-                    setLoginStatus("Email não encontrado.")
-                setStatus(true);
-                setAuth(true);
-            }
+            //         setLoginStatus("Senha errada.");
+            //         setStatus(true);
+            //     }
+            //     setAuth(true);
+            // } else {
+            //     // Username does not exist
+            //     if (email && email.length > 0)
+            //         setLoginStatus("Email não encontrado.")
+            //     setStatus(true);
+            //     setAuth(true);
+            // }
         } catch (error) {
             console.log(error);
             setStatus(true);

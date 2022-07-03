@@ -3,10 +3,11 @@ import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView, Pl
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
-import { React, useRef, useState, useEffect } from 'react';
+import { React, useRef, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import usersTable from '../sensitiveData/usersTable.json';
-import Splash from './transitionScreens/splash-screen';
+import { AuthContext } from './auth-context'
+// import Splash from './transitionScreens/splash-screen';
 
 const Hr = (props) => {
     return (
@@ -32,12 +33,13 @@ async function save(key, value) {
     }
 }
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({navigation}) {
     // Set states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loginStatus, setLoginStatus] = useState('Para continuar, efetue o login.');
     const [status, setStatus] = useState(false);
+    const [auth, setAuth] = useContext(AuthContext);
 
     // Set Refs
     const emailInput = useRef();
@@ -52,18 +54,19 @@ export default function LoginScreen({ navigation }) {
                 if (usersTable[email] === password) {
                     setLoginStatus("Para continuar, efetue o login.")
                     setStatus(true);
-                    navigation.navigate('MainNativeApp');
                 }
                 else {
                     // Username exists, but wrong password
                     setLoginStatus("Senha errada.");
                     setStatus(true);
                 }
+                setAuth(true);
             } else {
                 // Username does not exist
                 if (email && email.length > 0)
                     setLoginStatus("Email não encontrado.")
                 setStatus(true);
+                setAuth(true);
             }
         } catch (error) {
             console.log(error);
@@ -79,15 +82,16 @@ export default function LoginScreen({ navigation }) {
     }
 
     // Try to authenticate right away, before rendering the very first time
-    useEffect(() => {
-        setTimeout(() => {
-            authenticationRequest();
-        }, 4000);
-    })
+    // useEffect(() => {
+    //     setTimeout(() => {
+    //         authenticationRequest();
+    //     }, 4000);
+    // })
 
-    if (!status) {
-        return <Splash />
-    }
+    // if (!status) {
+    //     return null
+    //     return <Splash />
+    // }
 
     // Component
     return (

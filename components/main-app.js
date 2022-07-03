@@ -52,6 +52,7 @@ function MainApp() {
                 shadowOffset: { width: 0, height: 0 },
                 shadowOpacity: 0.2,
                 shadowRadius: 4,
+                display: (route.name === 'Settings') ? 'none': 'block'
             }
           })
         }

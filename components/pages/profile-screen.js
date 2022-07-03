@@ -1,48 +1,45 @@
-import { Text, View, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Platform, TouchableOpacity, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
-import { React, useRef, useState, useEffect } from 'react';
+import { React, useContext, useState } from 'react';
 import SelectDropdown from 'react-native-select-dropdown'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import { AuthContext } from '../auth-context'
 
-const Stack = createStackNavigator();
-
-import ProfileScreen from './profile-screen';
-
-
-export default HomeScreen = () => {
+const Hr = (props) => {
     return (
-        <NavigationContainer independent={true}>
-            <Stack.Navigator initialRouteName='Home'>
-                <Stack.Screen
-                    name="Home"
-                    component={Home}
-                    options={{headerShown: false}}
-                />
-                <Stack.Screen
-                    name="Profile"
-                    component={ProfileScreen}
-                    options={{headerShown: false}}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+        <View style={{
+            borderBottomColor: 'black',
+            borderBottomWidth: 1,
+            opacity: 0.2,
+            marginTop: 16,
+            marginBottom: 16,
+            padding: 0,
+            width: props.width,
+            marginLeft: props.margin
+        }}></View>
     )
 }
 
-const Home = function({navigation}) {
-    const sedes = ['Messejana', 'CCFP']
+export default ProfileScreen = function({navigation}) {
+    const [auth, setAuth] = useContext(AuthContext);
+
     return (
         <View style={styles.container}>
             <View style={styles.viewMain}>
                 <Card containerStyle={styles.cardHeader}>
                     <View style={{flexDirection: 'row'}}>
-                        <View style={styles.viewUsername}>
-                            <Text style={styles.textUsername}>Eduardo</Text>
-                            <Text style={styles.textIntro}>Bem vindo ao futuro</Text>
-                        </View>
+                        <TouchableOpacity
+                        style={styles.viewVoltar}
+                        onPress={()=>{navigation.navigate("Home")}}
+                        >
+                            <SvgUri
+                            width="24" height="24" uri='http://teste.maxia.education/packs/media/bootstrap-icons/arrow-left-short-c795432e.svg' 
+                            style={{marginLeft:'5%'}}
+                            />
+                            <Text style={styles.textVoltar}>Voltar</Text>
+                        </TouchableOpacity>
                         <View style={styles.viewLogo}>
                             <SvgXml width="70" height="15" xml={styles.maxiaSimpleLogoSvg.xml} />
                             <Text style={styles.textLogo}>
@@ -53,68 +50,77 @@ const Home = function({navigation}) {
                             </View>
                         </View>
                         <View style={styles.viewProfile}>
-                            <TouchableOpacity
-                            style={styles.viewProfileCircle}
-                            onPress={()=>{navigation.navigate("Profile")}}
-                            >
+                            <View style={styles.viewProfileCircle}>
                                 <Text style={styles.textProfileCircle}>E</Text>
-                            </TouchableOpacity>
+                            </View>
                         </View>
                     </View>
                 </Card>
-                <View style={styles.viewSede}>
-                    <Text style={styles.textSede}>Sede: </Text>
-                    <SelectDropdown
-	                    data={sedes}
-                        defaultValue={sedes[0]}
-                        buttonStyle={styles.dropdownSede}
-                        buttonTextStyle={styles.textDropDown}
-                        dropdownBackgroundColor={'rgb(255, 255, 255)'}
-                        renderDropdownIcon={isOpened => {
-                            return <FontAwesome name={isOpened ? 'chevron-up' : 'chevron-down'} color={'rgb(73, 73, 73)'} size={14} />;
-                        }}
-                        dropdownIconPosition={'right'}
-                        onSelect={(selectedItem, index) => {}}
-                    />
-                </View>
-                <Text style={styles.textMain}>Escolha o nível que deseja explorar</Text>
-                <View style={styles.viewNiveisRow}>
-                    <Card containerStyle={styles.cardNivel}>
-                        <SvgUri 
-                        width="60" height="60" uri='http://teste.maxia.education/packs/media/svg/infantil-5481e246.svg' 
-                        style={styles.svgNiveisLogo}
-                        />
-                        <Text style={styles.textNivel}>Educação Infantil</Text>
-                        <Text style={styles.textVerMais}>Ver mais</Text>
-                    </Card>
-                    <Card containerStyle={styles.cardNivel}>
-                        <SvgUri
-                        width="60" height="60" uri='http://teste.maxia.education/packs/media/svg/anos_iniciais-49c54123.svg'
-                        style={styles.svgNiveisLogo}
-                        />
-                        <Text style={styles.textNivel}>Anos Iniciais</Text>
-                        <Text style={styles.textVerMais}>Ver mais</Text>
-                    </Card>
-                </View>
-                <View style={styles.viewNiveisRow}>
-                    <Card containerStyle={styles.cardNivel}>
-                        <SvgUri
-                        width="60" height="60" uri='http://teste.maxia.education/packs/media/svg/anos_finais-e374799b.svg'
-                        style={styles.svgNiveisLogo}
-                        />
-                        <Text style={styles.textNivel}>Anos Finais</Text>
-                        <Text style={styles.textVerMais}>Ver mais</Text>
-                    </Card>
-                    <Card containerStyle={styles.cardNivel}>
-                        <SvgUri
-                        width="60" height="60" uri='http://teste.maxia.education/packs/media/svg/medio-cdb9ee8c.svg'
-                        style={styles.svgNiveisLogo}
-                        />
-                        <Text style={styles.textNivel}>Ensino Médio</Text>
-                        <Text style={styles.textVerMais}>Ver mais</Text>
-                    </Card>
-                </View>
-                <Text style={styles.textCentralAvaliacoes}>Central de Avaliações</Text>
+                <Card containerStyle={styles.cardAvatar}>
+                    <View style={{alignItems: 'center'}}>
+                        <Text style={styles.textAvatar}>Selecione seu avatar</Text>
+                        <Hr width='90%' margin='5%'/>
+                        {/* <ScrollView horizontal showsHorizontalScrollIndicator>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={styles.viewProfileCircleChoice}>
+                                    <Text style={styles.textProfileCircleChoice}>E</Text>
+                                </View>
+                                <View style={styles.viewProfileCircleChoice}>
+                                    <Text style={styles.textProfileCircleChoice}>E</Text>
+                                </View>
+                                <View style={styles.viewProfileCircleChoice}>
+                                    <Text style={styles.textProfileCircleChoice}>E</Text>
+                                </View>
+                                <View style={styles.viewProfileCircleChoice}>
+                                    <Text style={styles.textProfileCircleChoice}>E</Text>
+                                </View>
+                            </View>
+                        </ScrollView> */}
+                    </View>
+                </Card>
+                <Card containerStyle={styles.cardMain}>
+                    <TouchableOpacity style={{flexDirection: 'row'}}>
+                        <Text style={styles.textMain}>Sua conta</Text>
+                        <View style={{alignItems: 'flex-end', width: '50%'}}>
+                            <SvgUri
+                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                color={'rgb(73, 73, 73)'}
+                                style={{marginRight: '5%', marginTop: '5%'}}
+                            />
+                        </View>
+                        
+                    </TouchableOpacity>
+                </Card>
+                <Card containerStyle={styles.cardMain}>
+                    <TouchableOpacity style={{flexDirection: 'row'}}>
+                        <Text style={styles.textMain}>Mudar senha</Text>
+                        <View style={{alignItems: 'flex-end', width: '50%'}}>
+                            <SvgUri
+                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                color={'rgb(73, 73, 73)'}
+                                style={{marginRight: '5%', marginTop: '5%'}}
+                            />
+                        </View>
+                        
+                    </TouchableOpacity>
+                </Card>
+                <Card containerStyle={styles.cardMain}>
+                    <TouchableOpacity
+                    style={{flexDirection: 'row'}}
+                    onPress={()=>{setAuth(false)}}
+                    >
+                        <Text style={styles.textMain}>Sair</Text>
+                        <View style={{alignItems: 'flex-end', width: '50%'}}>
+                            <SvgUri
+                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                color={'rgb(73, 73, 73)'}
+                                style={{marginRight: '5%', marginTop: '5%'}}
+                            />
+                        </View>
+                        
+                    </TouchableOpacity>
+                </Card>
+                <Text style={styles.textCentralAvaliacoes}>Salve sua escolhas para validar</Text>
             </View>
         </View>
     )
@@ -131,9 +137,11 @@ const styles = StyleSheet.create({
     },
 
     // Views
-    viewUsername: {
+    viewVoltar: {
         textAlignVertical: 'center',
-        width: '31%'
+        width: '31%',
+        marginTop: '-3%',
+        paddingTop: 0
     },
     viewLogo: {
         alignItems: 'center',
@@ -158,6 +166,14 @@ const styles = StyleSheet.create({
         borderRadius: '50%',
         alignItems: 'center',
         marginRight: '13%'
+    },
+    viewProfileCircleChoice: {
+        backgroundColor: '#6f2282',
+        width: 75,
+        height: 75,
+        borderRadius: '50%',
+        alignItems: 'center',
+        // marginRight: '13%'
     },
     viewMain: {
         backgroundColor: 'rgb(248, 249, 250)',
@@ -221,6 +237,12 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontFamily: 'Bold',
     },
+    textProfileCircleChoice: {
+        color: 'rgb(255, 255, 255)',
+        fontSize: 40,
+        marginTop: 20,
+        fontFamily: 'Bold',
+    },
     textNivel: {
         color: 'rgb(73, 73, 73)',
         fontSize: 16,
@@ -262,15 +284,32 @@ const styles = StyleSheet.create({
         paddingVertical: 3,
         color: 'rgb(73, 73, 73)'
     },
-    textMain: {
-        color: 'rgb(73, 73, 73)',
-        fontSize: 24.5,
+    textVoltar: {
+        color: 'rgb(0, 157, 204)',
+        fontSize: 16,
         padding: 0,
-        textAlign: 'center',
-        marginLeft: '3%',
-        fontFamily: 'Bold',
-        marginTop: '5%',
+        textAlign: 'left',
+        marginLeft: '8%',
+        fontFamily: 'Regular',
+        marginTop: '1%',
         marginBottom: '2%'
+    },
+    textMain: {
+        width: '50%',
+        color: 'rgb(73, 73, 73)',
+        fontSize: 19.2,
+        padding: 8,
+        margin: 0,
+        textAlign: 'left',
+        fontFamily: 'Regular'
+    },
+    textAvatar: {
+        color: 'rgb(0, 157, 204)',
+        fontSize: 19.2,
+        padding: 8,
+        margin: 0,
+        textAlign: 'center',
+        fontFamily: 'Regular'
     },
 
 
@@ -288,17 +327,26 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 1,
     },
-    cardNivel: {
+    cardMain: {
         backgroundColor: "#fff",
         borderRadius: 20,
-        width: '44%',
-        margin: '3%',
+        marginBottom: '1.5%',
+        alignItems: 'flex-start',
+        borderColor: '#fff',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
+        shadowRadius: 4,
+    },
+    cardAvatar: {
+        backgroundColor: "#fff",
+        borderRadius: 20,
         marginBottom: '1.5%',
         alignItems: 'center',
         borderColor: '#fff',
         shadowColor: '#000',
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.2,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.3,
         shadowRadius: 4,
     },
 

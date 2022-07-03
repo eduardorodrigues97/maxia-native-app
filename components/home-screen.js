@@ -6,8 +6,34 @@ import { React, useRef, useState, useEffect } from 'react';
 import SelectDropdown from 'react-native-select-dropdown'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
 
-export default HomeScreen = function() {
+const Stack = createStackNavigator();
+
+import ProfileScreen from './pages/profile-screen';
+
+
+export default HomeScreen = () => {
+    return (
+        <NavigationContainer independent={true}>
+            <Stack.Navigator initialRouteName='Home'>
+                <Stack.Screen
+                    name="Home"
+                    component={Home}
+                    options={{headerShown: false}}
+                />
+                <Stack.Screen
+                    name="Profile"
+                    component={Home}
+                    options={{headerShown: false}}
+                />
+            </Stack.Navigator>
+        </NavigationContainer>
+    )
+}
+
+const Home = function({navigation}) {
     const sedes = ['Messejana', 'CCFP']
     return (
         <View style={styles.container}>

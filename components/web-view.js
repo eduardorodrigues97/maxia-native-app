@@ -7,9 +7,10 @@ import { StyleSheet, Dimensions } from 'react-native';
 import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import Loading from './transitionScreens/loading-screen';
-import usersTable from '../sensitiveData/usersTable.json';
+import { CommonActions } from '@react-navigation/native';
 
-export default function MyWebView( { navigation } ) {
+
+export default function MyWebView() {
     // Define states
     const [url, setUrl] = useState('http://teste.maxia.education/users/sign_in');
     const [javascriptInjection, setJavascriptInjection] = useState('');
@@ -24,7 +25,6 @@ export default function MyWebView( { navigation } ) {
     const onShouldStartLoadWithRequest = function(navigator) {
         // Set new URL to state
         setUrl(navigator.url);
-
         // INTERCEPT PDFs
         if (navigator.url.slice(-4) === '.pdf') {
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
@@ -33,50 +33,58 @@ export default function MyWebView( { navigation } ) {
         }
     
         if (navigator.url === 'http://teste.maxia.education/users/sign_out') {
-            // webRef.current.injectJavaScrip(`
-            
-            // `)
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
             setUrl('http://teste.maxia.education/users/sign_in')
-            navigation.navigate('LoginScreen');
+            setIsLoading(true);
+            navigation.navigate('Home');
+            return false;
+        }
+
+        if (!isLoading && navigator.url === 'http://teste.maxia.education/users/sign_in') {
+            webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
+            setIsLoading(true);
+            setTimeout(() => {
+                alert("Credenciais inválidas :(")
+            }, 100);
+            navigation.goBack();
+            
             return false;
         }
 
         return true;
     }
 
+    const resetAction = CommonActions.reset({
+        index: 0,
+        routes: [{ name: "WebView" }]
+    });
+
     // Async getter for authetication
     SecureStore.getItemAsync('email').then((tokenEmail) => {
         SecureStore.getItemAsync('password').then((tokenPassword) => {
-            //console.log(tokenEmail)
-            //console.log(tokenPassword)
-            if (tokenEmail in usersTable && usersTable[tokenEmail] === tokenPassword) {
-                INJECTED_JAVASCRIPT = `
-                var emailElement = document.getElementById("user_login");
-                var passwordElement = document.getElementById("user_password");
-                emailElement.value = "${tokenEmail}";
-                passwordElement.value = "${tokenPassword}";
-                document.getElementById("new_user").submit();
-                true;
-                `;
-                setJavascriptInjection(INJECTED_JAVASCRIPT);
-            }
-            else {
-                navigation.navigate("LoginScreen");
-            }
+            INJECTED_JAVASCRIPT = `
+            var emailElement = document.getElementById("user_login");
+            var passwordElement = document.getElementById("user_password");
+            emailElement.value = "${tokenEmail}";
+            passwordElement.value = "${tokenPassword}";
+            document.getElementById("new_user").submit();
+            true;
+            `;
+            setJavascriptInjection(INJECTED_JAVASCRIPT);
         })
     })
 
+    
     // Define Effects
     useEffect(() => {
-        if (!(
-            url === 'http://teste.maxia.education/users/sign_in' ||
-            url === 'http://teste.maxia.education/'
-        )) {
+        // if (!(
+        //     url === 'http://teste.maxia.education/users/sign_in' ||
+        //     url === 'http://teste.maxia.education/'
+        // )) {
             setTimeout(() => {
                 setIsLoading(false);
             }, 2000);
-        };
+        // };
     }, [url]);
 
     // Only render main component when javascriptInjection is ready

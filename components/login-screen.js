@@ -269,7 +269,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Bold'
     },
     loginPleaseText: {
-        fontWeight: 'bold',
         color: '#636464',
         fontSize: 16,
         textAlign: 'center',
@@ -312,17 +311,16 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderWidth: 0,
         borderColor: '#fdfdfe',
-        padding: 20,
+        padding: 15,
         shadowOpacity: 0,
         marginTop: 0,
-        paddingBottom: 0
     },
     textInputCard: {
-        backgroundColor: "#fefefe",
-        borderRadius: 12,
-        borderWidth: 0,
-        borderColor: '#fdfdfe',
+        backgroundColor: "transparent",
+        borderColor: '#fff',
+        // borderWidth: 0,
         shadowOpacity: 0,
+        shadowColor: '#fff',
         padding: 0,
         margin: 0
     },

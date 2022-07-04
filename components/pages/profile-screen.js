@@ -1,11 +1,10 @@
-import { Text, View, StyleSheet, Platform, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Platform, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
-import { React, useContext, useState } from 'react';
-import SelectDropdown from 'react-native-select-dropdown'
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { React, useContext } from 'react';
 import { AuthContext } from '../auth-context'
+import * as SecureStore from 'expo-secure-store';
 
 const Hr = (props) => {
     return (
@@ -20,6 +19,15 @@ const Hr = (props) => {
             marginLeft: props.margin
         }}></View>
     )
+}
+
+async function save(key, value) {
+    try {
+        await SecureStore.setItemAsync(key, value);
+        console.log('Saved succesfully')
+    } catch (error) {
+        console.log('Could not save variable')
+    }
 }
 
 export default ProfileScreen = function({navigation}) {
@@ -56,71 +64,86 @@ export default ProfileScreen = function({navigation}) {
                         </View>
                     </View>
                 </Card>
-                <Card containerStyle={styles.cardAvatar}>
-                    <View style={{alignItems: 'center'}}>
-                        <Text style={styles.textAvatar}>Selecione seu avatar</Text>
-                        <Hr width='90%' margin='5%'/>
-                        {/* <ScrollView horizontal showsHorizontalScrollIndicator>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={styles.viewProfileCircleChoice}>
-                                    <Text style={styles.textProfileCircleChoice}>E</Text>
+                <SafeAreaView style={{height: '100%', backgroundColor:'#f2f2f2'}}>
+                <ScrollView style={{}}>
+                    <Card containerStyle={styles.cardAvatar}>
+                        <View style={{alignItems: 'center'}}>
+                            <Text style={styles.textAvatar}>Selecione seu avatar</Text>
+                            <Hr width='98%' margin='1%'/>
+                            <ScrollView horizontal showsHorizontalScrollIndicator style={{paddingBottom: 0}}>
+                                <View style={{flexDirection: 'row', height: 0}}>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
+                                    <View style={styles.viewProfileCircleChoice}>
+                                        <Text style={styles.textProfileCircleChoice}>E</Text>
+                                    </View>
                                 </View>
-                                <View style={styles.viewProfileCircleChoice}>
-                                    <Text style={styles.textProfileCircleChoice}>E</Text>
-                                </View>
-                                <View style={styles.viewProfileCircleChoice}>
-                                    <Text style={styles.textProfileCircleChoice}>E</Text>
-                                </View>
-                                <View style={styles.viewProfileCircleChoice}>
-                                    <Text style={styles.textProfileCircleChoice}>E</Text>
-                                </View>
+                            </ScrollView>
+                        </View>
+                    </Card>
+                    <Card containerStyle={styles.cardMain}>
+                        <TouchableOpacity style={{flexDirection: 'row'}}>
+                            <Text style={styles.textMain}>Sua conta</Text>
+                            <View style={{alignItems: 'flex-end', width: '50%'}}>
+                                <SvgUri
+                                    width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                    color={'rgb(73, 73, 73)'}
+                                    style={{marginRight: '5%', marginTop: '5%'}}
+                                />
                             </View>
-                        </ScrollView> */}
-                    </View>
-                </Card>
-                <Card containerStyle={styles.cardMain}>
-                    <TouchableOpacity style={{flexDirection: 'row'}}>
-                        <Text style={styles.textMain}>Sua conta</Text>
-                        <View style={{alignItems: 'flex-end', width: '50%'}}>
-                            <SvgUri
-                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
-                                color={'rgb(73, 73, 73)'}
-                                style={{marginRight: '5%', marginTop: '5%'}}
-                            />
-                        </View>
-                        
-                    </TouchableOpacity>
-                </Card>
-                <Card containerStyle={styles.cardMain}>
-                    <TouchableOpacity style={{flexDirection: 'row'}}>
-                        <Text style={styles.textMain}>Mudar senha</Text>
-                        <View style={{alignItems: 'flex-end', width: '50%'}}>
-                            <SvgUri
-                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
-                                color={'rgb(73, 73, 73)'}
-                                style={{marginRight: '5%', marginTop: '5%'}}
-                            />
-                        </View>
-                        
-                    </TouchableOpacity>
-                </Card>
-                <Card containerStyle={styles.cardMain}>
-                    <TouchableOpacity
-                    style={{flexDirection: 'row'}}
-                    onPress={()=>{setAuth(false)}}
-                    >
-                        <Text style={styles.textMain}>Sair</Text>
-                        <View style={{alignItems: 'flex-end', width: '50%'}}>
-                            <SvgUri
-                                width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
-                                color={'rgb(73, 73, 73)'}
-                                style={{marginRight: '5%', marginTop: '5%'}}
-                            />
-                        </View>
-                        
-                    </TouchableOpacity>
-                </Card>
-                <Text style={styles.textCentralAvaliacoes}>Salve sua escolhas para validar</Text>
+                            
+                        </TouchableOpacity>
+                    </Card>
+                    <Card containerStyle={styles.cardMain}>
+                        <TouchableOpacity style={{flexDirection: 'row'}}>
+                            <Text style={styles.textMain}>Mudar senha</Text>
+                            <View style={{alignItems: 'flex-end', width: '50%'}}>
+                                <SvgUri
+                                    width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                    color={'rgb(73, 73, 73)'}
+                                    style={{marginRight: '5%', marginTop: '5%'}}
+                                />
+                            </View>
+                            
+                        </TouchableOpacity>
+                    </Card>
+                    <Card containerStyle={styles.cardMain}>
+                        <TouchableOpacity
+                        style={{flexDirection: 'row'}}
+                        onPress={()=>{
+                            setAuth(false)
+                            save('maxiaSessionToken', '')
+                        }}
+                        >
+                            <Text style={styles.textMain}>Sair</Text>
+                            <View style={{alignItems: 'flex-end', width: '50%'}}>
+                                <SvgUri
+                                    width="16" height="16" uri='http://teste.maxia.education/packs/media/bootstrap-icons/chevron-right-57e9cd5f.svg' 
+                                    color={'rgb(73, 73, 73)'}
+                                    style={{marginRight: '5%', marginTop: '5%'}}
+                                />
+                            </View>
+                            
+                        </TouchableOpacity>
+                    </Card>
+                    <Text style={styles.textCentralAvaliacoes}>Salve sua escolhas para validar</Text>
+                    <Button title={'SALVAR'} buttonStyle={styles.buttonStyle}
+                    titleStyle={styles.textButton} style={{marginBottom: '40%'}}/>
+                </ScrollView>
+                </SafeAreaView>
             </View>
         </View>
     )
@@ -153,11 +176,10 @@ const styles = StyleSheet.create({
     },
     viewTextYear: {
         backgroundColor: '#fff',
-        borderRadius: 0,
         marginBottom: '-16%',
         paddingTop: '4%',
         width: '50%',
-        borderRadius: 15
+        borderRadius: 15,
     },
     viewProfileCircle: {
         backgroundColor: '#6f2282',
@@ -169,15 +191,15 @@ const styles = StyleSheet.create({
     },
     viewProfileCircleChoice: {
         backgroundColor: '#6f2282',
-        width: 75,
-        height: 75,
+        width: 80,
+        height: 80,
         borderRadius: '50%',
         alignItems: 'center',
-        // marginRight: '13%'
+        margin: 15,
     },
     viewMain: {
         backgroundColor: 'rgb(248, 249, 250)',
-        height: '150%'
+        flex: 1
     },
     viewNiveisRow: {
         flexDirection: 'row'
@@ -229,7 +251,7 @@ const styles = StyleSheet.create({
         margin: 0,
         paddingBottom: 3,
         textAlign: 'center',
-        fontFamily: 'Medium'
+        fontFamily: 'Medium',
     },
     textProfileCircle: {
         color: 'rgb(255, 255, 255)',
@@ -267,7 +289,7 @@ const styles = StyleSheet.create({
         marginLeft: '3%',
         fontFamily: 'Regular',
         marginTop: '5%',
-        textDecorationLine: 'underline'
+        textDecorationLine: 'underline',
     },
     textSede: {
         color: 'rgb(73, 73, 73)',
@@ -311,6 +333,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Regular'
     },
+    textButton: {
+        color: '#fff',
+        fontFamily: 'Bold',
+        fontWeight: '400'
+    },
 
 
     // Cards
@@ -326,6 +353,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 1,
+        zIndex: 2
     },
     cardMain: {
         backgroundColor: "#fff",
@@ -342,6 +370,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 20,
         marginBottom: '1.5%',
+        height: '35%',
         alignItems: 'center',
         borderColor: '#fff',
         shadowColor: '#000',
@@ -362,12 +391,10 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 1,
         shadowRadius: 2,
-        color: '#afafaf',
-        fontSize: 16,
         marginTop: 16,
-        fontWeight: '500',
         marginBottom: 10,
-        fontFamily: 'Regular'
+        width: '90%',
+        marginLeft: '5%'
     },
     forgotPasswordButtonStyle: {
         backgroundColor: '#fff',

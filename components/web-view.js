@@ -83,7 +83,7 @@ export default function MyWebView({navigation}) {
         // )) {
             setTimeout(() => {
                 setIsLoading(false);
-            }, 2000);
+            }, 4000);
         // };
     }, [url]);
 

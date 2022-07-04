@@ -33,11 +33,12 @@ async function save(key, value) {
 }
 
 export default function LoginScreen({navigation}) {
+    const loginStatusTexts = ['Para continuar, efetue o login.', 'Senha errada.', 'Email não encontrado.', 'Para continuar, efetue o login.']
     // Set states
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [loginStatus, setLoginStatus] = useState('Para continuar, efetue o login.');
-    const [status, setStatus] = useState(false);
+    const [status, setStatus] = useState(1);
+    const [isRequesting, setIsRequesting] = useState(false);
     const [auth, setAuth] = useContext(AuthContext);
 
     // Set Refs
@@ -45,55 +46,39 @@ export default function LoginScreen({navigation}) {
     const passwordInput = useRef();
 
     // Define auxiliary functions
-    async function authenticationRequest() {
+    const authRequest = async () => {
         try {
-            let email = await SecureStore.getItemAsync('email');
-            let password = await SecureStore.getItemAsync('password');
-            setStatus(true);
-            setAuth(true);
-            setLoginStatus("Para continuar, efetue o login.")
-            // if (email in usersTable) {
-            //     if (usersTable[email] === password) {
-            //         setLoginStatus("Para continuar, efetue o login.")
-            //         setStatus(true);
-            //     }
-            //     else {
-                    // Username exists, but wrong password
-            //         setLoginStatus("Senha errada.");
-            //         setStatus(true);
-            //     }
-            //     setAuth(true);
-            // } else {
-            //     // Username does not exist
-            //     if (email && email.length > 0)
-            //         setLoginStatus("Email não encontrado.")
-            //     setStatus(true);
-            //     setAuth(true);
-            // }
+            const response = await fetch('https://native-app-dev-7rbjwj4yoa-rj.a.run.app/get_authentication', {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+            const json = await response.json();
+            setStatus(json['status']);
+            if (json['status'] === 1) {
+                save('maxiaSessionToken', json['token']);
+                // Salvar credenciais enquanto WebView ainda estiver sendo usada
+                save('email', email)
+                save('password', password)
+                setAuth(true);
+            }
+            setIsRequesting(false);
         } catch (error) {
-            console.log(error);
-            setStatus(true);
+            console.log(error)
+            setIsRequesting(false);
         }
     }
 
     const authenticate = () => {
-        save('email', email)
-        save('password', password)
-        authenticationRequest()
-        return
+        setIsRequesting(true);
+        authRequest();
     }
-
-    // Try to authenticate right away, before rendering the very first time
-    // useEffect(() => {
-    //     setTimeout(() => {
-    //         authenticationRequest();
-    //     }, 4000);
-    // })
-
-    // if (!status) {
-    //     return null
-    //     return <Splash />
-    // }
 
     // Component
     return (
@@ -137,13 +122,17 @@ export default function LoginScreen({navigation}) {
                         <Text
                             style={styles.loginPleaseText}
                         >
-                            {loginStatus}
+                            {loginStatusTexts[status-1]}
                         </Text>
                     </Card>
                     <Card containerStyle={styles.textInputCard}>
-                        <Text style={styles.emailSenha}>Email</Text>
+                        <Text style={{...styles.emailSenha,
+                        color: (status === 3) ? '#E30000': '#009dcc'
+                        }}>Email</Text>
                         <TextInput
-                            style={styles.textInputText}
+                            style={{...styles.textInputText,
+                            borderColor: (status === 3) ? '#E30000': '#009dcc'
+                            }}
                             placeholder={'nome@email.com'}
                             placeholderTextColor={'#afafaf'}
                             autoCapitalize={'none'}
@@ -154,7 +143,10 @@ export default function LoginScreen({navigation}) {
                             keyboardType={'email-address'}
                             returnKeyType={'next'}
                             onSubmitEditing={() => passwordInput.current.focus()}
-                            onChangeText={(value) => setEmail(value)}
+                            onChangeText={(value) => {
+                                setEmail(value)
+                                setStatus((status===3) ? 1 : status)
+                            }}
 
                             // onSubmitEditing Check for mistypes and focus the password
                             // onEndEditing Check mistypes
@@ -164,9 +156,13 @@ export default function LoginScreen({navigation}) {
                         />
                     </Card>
                     <Card containerStyle={styles.textInputCard}>
-                        <Text style={styles.emailSenha}>Senha</Text>
+                        <Text style={{...styles.emailSenha,
+                            color: (status === 2) ? '#E30000': '#009dcc'
+                        }}>Senha</Text>
                         <TextInput
-                            style={styles.textInputText}
+                            style={{...styles.textInputText,
+                                borderColor: (status === 2) ? '#E30000': '#009dcc',
+                            }}
                             placeholder={'Sua Senha'}
                             placeholderTextColor={'#afafaf'}
                             autoCapitalize='none'
@@ -174,7 +170,10 @@ export default function LoginScreen({navigation}) {
                             selectTextOnFocus={true}
                             returnKeyType={'done'}
                             onSubmitEditing={() => authenticate()}
-                            onChangeText={(value) => setPassword(value)}
+                            onChangeText={(value) => {
+                                setPassword(value)
+                                setStatus((status===2) ? 1 : status)
+                            }}
 
                             ref={passwordInput}
                         />
@@ -186,7 +185,10 @@ export default function LoginScreen({navigation}) {
                             fontFamily: 'Bold',
                             fontWeight: '400'
                         }}
-                        buttonStyle={styles.buttonStyle}
+                        buttonStyle={{...styles.buttonStyle,
+                            shadowColor: (isRequesting ? 'grey' : '#0087b1')
+                        }}
+                        disabled={(isRequesting && [1,4].includes(status))}
                         onPress={authenticate}
                     />
                     <Button 
@@ -272,7 +274,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Bold'
     },
     textInputText: {
-        fontWeight: '500',
         color: '#494949',
         fontSize: 16,
         textAlign: 'left',
@@ -284,7 +285,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Medium'
     },
     emailSenha: {
-        fontWeight: '700',
         color: '#009dcc',
         fontSize: 16,
         marginTop: 16,

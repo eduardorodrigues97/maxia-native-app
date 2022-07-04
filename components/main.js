@@ -8,6 +8,7 @@ import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import { useFonts } from 'expo-font';
 import { Asset } from 'expo-asset';
+import * as SecureStore from 'expo-secure-store';
 
 // Component imports
 import OfflineScreen from './offline-screen';
@@ -20,12 +21,11 @@ import SettingsScreen from './pages/setting-screen';
 
 // Images
 import sadBot from '../assets/sad-bot.png';
-import infantil from '../assets/home-screen/infantil.svg'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
 // Import Navigators from React Navigation
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { AuthContext } from './auth-context';
@@ -45,22 +45,21 @@ export default Main = () => {
 
     // Load background assets that can be loaded on background
     Asset.fromModule(sadBot).downloadAsync()
-    Asset.fromModule(infantil).downloadAsync()
     
     // Lock screen rotation
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
 
     // States
     const [isLoading, setIsLoading] = useState(true);
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [auth, setAuth] = useContext(AuthContext);
 
     // Get Net Info
     let netInfo = useNetInfo();
 
     // Auth Checker
-    const checkAuthentication = async (token) => {
+    const checkAuthentication = async () => {
         try {
+            let token = await SecureStore.getItemAsync('maxiaSessionToken');
             const response = await fetch('https://native-app-dev-7rbjwj4yoa-rj.a.run.app/check_authentication', {
                 method: 'POST',
                 headers: {
@@ -72,7 +71,7 @@ export default Main = () => {
                 })
             });
             const json = await response.json();
-            setIsAuthenticated(!json.status);
+            setAuth(json.status);
             setIsLoading(false);
         } catch (error) {
             console.log(error)
@@ -82,14 +81,14 @@ export default Main = () => {
     // First run
     useEffect(() => {
         setTimeout(() => {
-            checkAuthentication('my_token');
+            checkAuthentication();
         }, 3500);
     }, []);
 
     // If the fonts are not yet loaded, return without rendering
-    // if (!loaded) {
-    //     return null;
-    // }
+    if (!loaded) {
+        return null;
+    }
 
     if (netInfo.isConnected === false){
         return OfflineScreen()

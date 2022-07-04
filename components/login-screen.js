@@ -5,7 +5,7 @@ import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
 import { React, useRef, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { AuthContext } from './auth-context'
+import { AuthContext } from './context'
 // import Splash from './transitionScreens/splash-screen';
 
 const Hr = (props) => {

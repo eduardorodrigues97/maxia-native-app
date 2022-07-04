@@ -16,8 +16,8 @@ import MyWebView from './web-view';
 import LoginScreen from './login-screen';
 import Splash from './transitionScreens/splash-screen';
 import HomeScreen from './pages/home-screen';
-import OtherScreen from './pages/other-screen';
 import SettingsScreen from './pages/setting-screen';
+import {Avaliacoes} from './centralAvaliacoesNavigator/avaliacoes';
 
 // Images
 import sadBot from '../assets/sad-bot.png';
@@ -28,7 +28,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { AuthContext } from './auth-context';
+import { Context } from './context';
 
 
 const Tab = createBottomTabNavigator();
@@ -48,10 +48,12 @@ export default Main = () => {
     
     // Lock screen rotation
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
-
+    
     // States
     const [isLoading, setIsLoading] = useState(true);
-    const [auth, setAuth] = useContext(AuthContext);
+    const { authState, navigatorState } = useContext(Context);
+    const [auth, setAuth] = authState;
+    const [navigator, setNavigator] = navigatorState;
 
     // Get Net Info
     let netInfo = useNetInfo();
@@ -117,6 +119,9 @@ export default Main = () => {
                         if (rn === 'WebView') {
                             iconName = focused ? 'desktop' : 'desktop-outline';
                         }
+                        if (rn === 'Avaliacoes') {
+                            iconName = focused ? 'desktop' : 'desktop-outline';
+                        }
 
                         // You can return any component that you like here!
                         return <Ionicons name = {iconName} size={size} color={color} />;
@@ -127,7 +132,7 @@ export default Main = () => {
                         paddingBottom: 10,
                         fontSize: 16,
                         textAlign: 'center',
-                        fontFamily: 'Medium'
+                        fontFamily: 'Medium',
                     },
                     tabBarStyle: {
                         padding: 10,
@@ -138,7 +143,7 @@ export default Main = () => {
                         shadowOffset: { width: 0, height: 0 },
                         shadowOpacity: 0.2,
                         shadowRadius: 4,
-                        display: (!auth || route.name === 'WebView') ? 'none': 'block'
+                        display: (!auth || ['WebView'].includes(route.name)) ? 'none': 'block'
                     }
                 })}
             >
@@ -153,13 +158,19 @@ export default Main = () => {
                     }}
                     />
                 }
-                {/* Authenticated Screens */}
-                {auth &&
+                {/* Main App Screens */}
+                {auth && navigator === 'main' &&
                 <>
                     <Tab.Screen name={'Home'} component={HomeScreen} options={{headerShown: false}}/>
-                    <Tab.Screen name={'Other'} component={OtherScreen} options={{headerShown: false}}/>
                     <Tab.Screen name={'Settings'} component={SettingsScreen} options={{headerShown: false}}/>
                     <Tab.Screen name={'WebView'} component={MyWebView} options={{headerShown: false}}/>
+                    
+                </>
+                }
+                {/* Central de Avaliações */}
+                {auth && navigator === 'avaliacoes' &&
+                <>
+                    <Tab.Screen name={'Avaliacoes'} component={Avaliacoes} options={{headerShown: false}}/>
                 </>
                 }
             </Tab.Navigator>

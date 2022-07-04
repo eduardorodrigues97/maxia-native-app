@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
 import { React, useContext } from 'react';
-import { AuthContext } from '../auth-context'
+import { AuthContext } from '../context'
 import * as SecureStore from 'expo-secure-store';
 
 const Hr = (props) => {

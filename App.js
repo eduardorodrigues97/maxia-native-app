@@ -5,7 +5,7 @@ import { React } from 'react';
 // Component imports
 import Main from './components/main';
 
-import { StateProvider } from './components/auth-context';
+import { StateProvider } from './components/context';
 
 export default App = () => {
     return (

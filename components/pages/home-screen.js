@@ -2,11 +2,12 @@ import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import { Card } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
-import { React } from 'react';
+import { React, useContext } from 'react';
 import SelectDropdown from 'react-native-select-dropdown'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import { Context } from '../context';
 
 // SVG
 import MaxiaSimpleLogo from '../../assets/home-screen/maxiaSimpleLogo.svg'
@@ -38,6 +39,8 @@ export default HomeScreen = () => {
 
 const Home = function({navigation}) {
     const sedes = ['Messejana', 'CCFP']
+    const { navigatorState } = useContext(Context);
+    const [navigator, setNavigator] = navigatorState;
     return (
         <View style={styles.container}>
             <View style={styles.viewMain}>
@@ -115,7 +118,9 @@ const Home = function({navigation}) {
                         <Text style={styles.textVerMais}>Ver mais</Text>
                     </Card>
                 </View>
-                <Text style={styles.textCentralAvaliacoes}>Central de Avaliações</Text>
+                <Text style={styles.textCentralAvaliacoes}
+                onPress={()=>{setNavigator('avaliacoes')}}
+                >Central de Avaliações</Text>
             </View>
         </View>
     )

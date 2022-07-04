@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "Maxia - Professor",
-    "slug": "maxia-native-teacher",
+    "name": "Experiência Professor",
+    "slug": "experiencia-professor",
+    "owner": "maxia",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -1,12 +1,13 @@
 // import React from "react";
-import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, StyleSheet, TextInput, KeyboardAvoidingView, ScrollView, Platform, Touchable, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
-import { SvgXml } from 'react-native-svg';
+import { SvgXml, SvgUri } from 'react-native-svg';
 import { React, useRef, useState, useEffect, useContext } from 'react';
+import Collapsible from 'react-native-collapsible';
 import * as SecureStore from 'expo-secure-store';
-import { Context } from './context'
-import ForgotPassword from './forgot-password';
+import { Context } from './context';
+// import Splash from './transitionScreens/splash-screen';
 
 const Hr = (props) => {
     return (
@@ -23,63 +24,13 @@ const Hr = (props) => {
     )
 }
 
-async function save(key, value) {
-    try {
-        await SecureStore.setItemAsync(key, value);
-        console.log('Saved succesfully')
-    } catch (error) {
-        console.log('Could not save variable')
-    }
-}
-
-export default function LoginScreen({navigation}) {
-    const loginStatusTexts = ['Para continuar, efetue o login.', 'Senha errada.', 'Email não encontrado.', 'Para continuar, efetue o login.']
-    // Set states
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [status, setStatus] = useState(1);
-    const [isRequesting, setIsRequesting] = useState(false);
-    const { authState } = useContext(Context);
-    const [auth, setAuth] = authState;
-
+export default function ForgotPassword({navigation}) {
     // Set Refs
     const emailInput = useRef();
-    const passwordInput = useRef();
-
-    // Define auxiliary functions
-    const authRequest = async () => {
-        try {
-            const response = await fetch('https://native-app-dev-7rbjwj4yoa-rj.a.run.app/get_authentication', {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    email: email,
-                    password: password
-                })
-            });
-            const json = await response.json();
-            setStatus(json['status']);
-            if (json['status'] === 1) {
-                save('maxiaSessionToken', json['token']);
-                // Salvar credenciais enquanto WebView ainda estiver sendo usada
-                save('email', email)
-                save('password', password)
-                setAuth(true);
-            }
-            setIsRequesting(false);
-        } catch (error) {
-            console.log(error)
-            setIsRequesting(false);
-        }
-    }
-
-    const authenticate = () => {
-        setIsRequesting(true);
-        authRequest();
-    }
+    const [email, setEmail] = useState('email@email.com');
+    const [isRequesting, setIsRequesting] = useState(false);
+    const [isCollapsedQuiz, setIsCollapsedQuiz] = useState(true);
+    const [isCollapsedEmail, setIsCollapsedEmail] = useState(true);
 
     // Component
     return (
@@ -98,7 +49,7 @@ export default function LoginScreen({navigation}) {
             <View
                 style={{...styles.container}}
             >
-                <Card containerStyle={styles.cardStyle}>
+                <Card containerStyle={styles.cardHeader}>
                     <View style={{alignItems: "center", justifyContent:"center"}}>
                         <SvgXml width="141" height="30" xml={styles.maxiaLogoSvg.xml} />
                         <Text
@@ -109,31 +60,23 @@ export default function LoginScreen({navigation}) {
                     </View>
                 </Card>
                 <Hr width={'90%'} margin={'5%'}/>
-                <Card containerStyle={styles.cardStyle}>
-                    <View style={{alignItems: "center", justifyContent:"center", flexDirection: "row"}}>
-                        <Text
-                            style={styles.loginText}
-                        >
-                            Login
-                        </Text>
-                        <SvgXml width="24" height="24" xml={styles.loginImgSvg.xml} />
-                    </View>
-                    <Hr width={'100%'} margin={'0%'}/>
-                    <Card containerStyle={styles.loginCardStyle}>
-                        <Text
-                            style={styles.loginPleaseText}
-                        >
-                            {loginStatusTexts[status-1]}
-                        </Text>
-                    </Card>
+                <Card containerStyle={styles.cardCollapsible}>
+                    <TouchableOpacity 
+                    style={styles.viewTitleCollapsibleCard}
+                    onPress={()=>{
+                        if (isCollapsedQuiz) setIsCollapsedEmail(true)
+                        setIsCollapsedQuiz(!isCollapsedQuiz)
+                        
+                        }}>
+                        <SvgUri width="24" height="24" color='rgb(0, 157, 204)'
+                        uri='http://teste.maxia.education/packs/media/bootstrap-icons/card-checklist-9137e9c0.svg' />
+                        <Text style={styles.textTitleCollapsibleCard}>Quiz de Identificação:</Text>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={isCollapsedQuiz}>
                     <Card containerStyle={styles.textInputCard}>
-                        <Text style={{...styles.emailSenha,
-                        color: (status === 3) ? '#E30000': '#009dcc'
-                        }}>Email</Text>
+                        <Text style={styles.emailSenha}>Email</Text>
                         <TextInput
-                            style={{...styles.textInputText,
-                            borderColor: (status === 3) ? '#E30000': '#009dcc'
-                            }}
+                            style={styles.textInputText}
                             placeholder={'nome@email.com'}
                             placeholderTextColor={'#afafaf'}
                             autoCapitalize={'none'}
@@ -143,89 +86,78 @@ export default function LoginScreen({navigation}) {
                             selectTextOnFocus={true}
                             keyboardType={'email-address'}
                             returnKeyType={'next'}
-                            onSubmitEditing={() => passwordInput.current.focus()}
+                            // onSubmitEditing={}
                             onChangeText={(value) => {
                                 setEmail(value)
-                                setStatus((status===3) ? 1 : status)
                             }}
-
-                            // onSubmitEditing Check for mistypes and focus the password
-                            // onEndEditing Check mistypes
                             blurOnSubmit={false}
 
                             ref={emailInput}
                         />
                     </Card>
-                    <Card containerStyle={styles.textInputCard}>
-                        <Text style={{...styles.emailSenha,
-                            color: (status === 2) ? '#E30000': '#009dcc'
-                        }}>Senha</Text>
-                        <TextInput
-                            style={{...styles.textInputText,
-                                borderColor: (status === 2) ? '#E30000': '#009dcc',
-                            }}
-                            placeholder={'Sua Senha'}
-                            placeholderTextColor={'#afafaf'}
-                            autoCapitalize='none'
-                            secureTextEntry={true}
-                            selectTextOnFocus={true}
-                            returnKeyType={'done'}
-                            onSubmitEditing={() => authenticate()}
-                            onChangeText={(value) => {
-                                setPassword(value)
-                                setStatus((status===2) ? 1 : status)
-                            }}
-
-                            ref={passwordInput}
-                        />
-                    </Card>
                     <Button 
-                        title={'CONFIRMAR'}
+                        title={'ATUALIZAR'}
                         titleStyle={{
                             color: '#fff',
                             fontFamily: 'Bold',
                             fontWeight: '400'
                         }}
                         buttonStyle={{...styles.buttonStyle,
-                            shadowColor: (isRequesting ? 'grey' : '#0087b1')
+                            shadowColor: (isRequesting ? 'grey' : 'rgb(111, 34, 130)')
                         }}
-                        disabled={(isRequesting && [1,4].includes(status))}
-                        onPress={authenticate}
+                        containerStyle={styles.buttonContainerStyle}
+                        disabled={(isRequesting)}
                     />
-                    <Button 
-                        title={'Esqueceu sua senha?'}
-                        titleStyle={{
-                            color: '#afafaf',
-                            fontFamily: 'Regular',
-                            fontWeight: '400'
-                        }}
-                        buttonStyle={styles.forgotPasswordButtonStyle}
-                        onPress={()=>{navigation.navigate("ForgotPassword")}}
-                    />
+                    </Collapsible>
                 </Card>
-                <Hr width={'90%'} margin={'5%'}/>
-                <Card containerStyle={styles.helpCard}>
-                    <Text 
-                        style={{
+                <Card containerStyle={styles.cardCollapsible}>
+                    <TouchableOpacity 
+                    style={styles.viewTitleCollapsibleCard}
+                    onPress={()=>{
+                        if (isCollapsedEmail) setIsCollapsedQuiz(true)
+                        setIsCollapsedEmail(!isCollapsedEmail)
+                        }}>
+                        <SvgUri width="24" height="24" color='rgb(0, 157, 204)'
+                        uri='http://teste.maxia.education/packs/media/bootstrap-icons/envelope-2cede5c3.svg' />
+                        <Text style={styles.textTitleCollapsibleCard}>Recuperação por e-mail:</Text>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={isCollapsedEmail}>
+                    <Card containerStyle={styles.textInputCard}>
+                        <Text style={styles.emailSenha}>Email</Text>
+                        <TextInput
+                            style={styles.textInputText}
+                            placeholder={'nome@email.com'}
+                            placeholderTextColor={'#afafaf'}
+                            autoCapitalize={'none'}
+                            autoComplete={'email'}
+                            autoCorrect={false}
+                            autoFocus={true}
+                            selectTextOnFocus={true}
+                            keyboardType={'email-address'}
+                            returnKeyType={'next'}
+                            // onSubmitEditing={}
+                            onChangeText={(value) => {
+                                setEmail(value)
+                            }}
+                            blurOnSubmit={false}
+
+                            ref={emailInput}
+                        />
+                    </Card>
+                    <Button 
+                        title={'ENVIAR E-MAIL'}
+                        titleStyle={{
                             color: '#fff',
                             fontFamily: 'Bold',
-                            fontSize: 16,
-                            marginTop: 5
+                            fontWeight: '400'
                         }}
-                    >
-                        Precisa de ajuda?
-                    </Text>
-                    <Text 
-                        style={{
-                            color: '#6c757d',
-                            fontFamily: 'Regular',
-                            fontSize: 16,
-                            marginTop: 5,
-                            marginBottom: 15
+                        buttonStyle={{...styles.buttonStyle,
+                            shadowColor: (isRequesting ? 'grey' : 'rgb(111, 34, 130)')
                         }}
-                    >
-                        Contate nosso suporte
-                    </Text>
+                        containerStyle={styles.buttonContainerStyle}
+                        disabled={(isRequesting)}
+                    />
+                    </Collapsible>
                 </Card>
             </View>
         </ScrollView>
@@ -243,14 +175,6 @@ const styles = StyleSheet.create({
     },
 
     // Text
-    text: {
-        fontWeight: '500',
-        color: '#afafaf',
-        fontSize: 24,
-        marginTop: 16,
-        textAlign: 'center',
-        fontFamily: 'Medium'
-    },
     logoText: {
         fontWeight: '500',
         color: '#009dcc',
@@ -260,20 +184,12 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Medium'
     },
-    loginText: {
-        color: '#494949',
-        fontSize: 30,
-        fontWeight: 'bold',
-        lineHeight: 37,
-        paddingRight: 10,
-        fontFamily: 'Bold'
-    },
-    loginPleaseText: {
-        fontWeight: 'bold',
-        color: '#636464',
-        fontSize: 16,
-        textAlign: 'center',
-        fontFamily: 'Bold'
+    textTitleCollapsibleCard: {
+        color: 'rgb(0, 157, 204)',
+        marginLeft: 5,
+        fontFamily: 'Medium',
+        fontSize: 20,
+        alignSelf: 'flex-end'
     },
     textInputText: {
         color: '#494949',
@@ -288,15 +204,26 @@ const styles = StyleSheet.create({
     },
     emailSenha: {
         color: '#009dcc',
-        fontSize: 16,
-        marginTop: 16,
+        fontSize: 18,
         textAlign: 'left',
         padding: 0,
         fontFamily: 'Bold'
     },
+   
+    viewTitleCollapsibleCard: {
+        alignItems: "center", 
+        justifyContent:"center", 
+        flexDirection: "row",
+        borderColor: '#f2f2f2',
+        borderWidth: 2,
+        flexGrow: 1,
+        borderRadius: 15,
+        margin: 0,
+        padding: 15
+    },
 
     // Cards
-    cardStyle: {
+    cardHeader: {
         backgroundColor: "#fff",
         borderRadius: 12,
         borderWidth: 0,
@@ -307,66 +234,45 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         marginTop: 0
     },
-    loginCardStyle: {
-        backgroundColor: "#fefefe",
-        borderRadius: 12,
+    cardCollapsible: {
+        backgroundColor: "#fff",
+        borderRadius: 15,
         borderWidth: 0,
-        borderColor: '#fdfdfe',
-        padding: 20,
-        shadowOpacity: 0,
-        marginTop: 0,
-        paddingBottom: 0
-    },
-    textInputCard: {
-        backgroundColor: "#fefefe",
-        borderRadius: 12,
-        borderWidth: 0,
-        borderColor: '#fdfdfe',
-        shadowOpacity: 0,
         padding: 0,
-        margin: 0
-    },
-    helpCard: {
-        backgroundColor: "#6f2282",
-        borderRadius: 12,
-        borderWidth: 0,
-        padding: 20,
         shadowColor: '#000',
         shadowOffset: { width: 1, height: 4 },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        marginTop: 0
+        marginTop: 0,
+        marginBottom: 15
+    },
+    textInputCard: {
+        flex: 1,
+        backgroundColor: "#fefefe",
+        borderRadius: 12,
+        borderWidth: 0,
+        borderColor: '#fdfdfe',
+        shadowOpacity: 0,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        marginHorizontal: 0
     },
 
     // Buttons
     buttonStyle: {
-        backgroundColor: '#009dcc',
+        backgroundColor: 'rgb(111, 34, 130)',
         borderRadius: 20,
         paddingTop: 14,
         paddingBottom: 11,
-        borderColor: '#009dcc',
+        borderColor: 'rgb(111, 34, 130)',
         textAlign: 'center',
-        shadowColor: '#0087b1',
-        shadowOffset: { width: 0, height: 4 },
+        // shadowColor: 'rgb(111, 34, 130)', Set with state
+        shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 1,
         shadowRadius: 2,
-        color: '#afafaf',
-        fontSize: 16,
-        marginTop: 16,
-        fontWeight: '500',
-        marginBottom: 10,
-        fontFamily: 'Regular'
     },
-    forgotPasswordButtonStyle: {
-        backgroundColor: '#fff',
-        paddingVertical: 14,
-        textAlign: 'center',
-        color: '#c4c4c4',
-        fontSize: 16,
-        marginTop: 10,
-        paddingBottom: 0,
-        fontWeight: '400',
-        marginBottom: 10
+    buttonContainerStyle: {
+        padding: 20
     },
 
     // Images

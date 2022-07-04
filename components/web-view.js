@@ -1,6 +1,6 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
-import { React, useRef, useState, useEffect } from 'react';
+import { React, useRef, useState, useEffect, useContext } from 'react';
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import { StyleSheet, Dimensions } from 'react-native';
@@ -8,6 +8,17 @@ import Constants from 'expo-constants';
 import * as SecureStore from 'expo-secure-store';
 import Loading from './transitionScreens/loading-screen';
 import { CommonActions } from '@react-navigation/native';
+import { Context } from './context'
+
+
+async function save(key, value) {
+    try {
+        await SecureStore.setItemAsync(key, value);
+        console.log('Saved succesfully')
+    } catch (error) {
+        console.log('Could not save variable')
+    }
+}
 
 
 export default function MyWebView({navigation}) {
@@ -15,6 +26,8 @@ export default function MyWebView({navigation}) {
     const [url, setUrl] = useState('http://teste.maxia.education/users/sign_in');
     const [javascriptInjection, setJavascriptInjection] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const { authState } = useContext(Context);
+    const [auth, setAuth] = authState;
     const dimensions = Dimensions.get('window');
 
     // Define refs
@@ -36,20 +49,24 @@ export default function MyWebView({navigation}) {
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
             setUrl('http://teste.maxia.education/users/sign_in')
             setIsLoading(true);
-            navigation.navigate('Home');
+            // navigation.navigate('Home');
+            setAuth(false);
+            save('maxiaSessionToken', '');
+            save('email', '');
+            save('password', '');
             return false;
         }
 
-        if (!isLoading && navigator.url === 'http://teste.maxia.education/users/sign_in') {
-            webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
-            setIsLoading(true);
-            setTimeout(() => {
-                alert("Credenciais inválidas :(")
-            }, 100);
-            navigation.goBack();
+        // if (!isLoading && navigator.url === 'http://teste.maxia.education/users/sign_in') {
+        //     webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
+        //     setIsLoading(true);
+        //     setTimeout(() => {
+        //         alert("Credenciais inválidas :(")
+        //     }, 100);
+        //     navigation.goBack();
             
-            return false;
-        }
+        //     return false;
+        // }
 
         return true;
     }
@@ -77,13 +94,15 @@ export default function MyWebView({navigation}) {
     
     // Define Effects
     useEffect(() => {
-        // if (!(
-        //     url === 'http://teste.maxia.education/users/sign_in' ||
-        //     url === 'http://teste.maxia.education/'
-        // )) {
-            setTimeout(() => {
-                setIsLoading(false);
-            }, 10000);
+        if (!(
+            url === 'http://teste.maxia.education/users/sign_in' ||
+            url === 'http://teste.maxia.education/'
+        )) {
+            setIsLoading(false);
+        }
+            // setTimeout(() => {
+            //     setIsLoading(false);
+            // }, 4000);
         // };
     }, [url]);
 

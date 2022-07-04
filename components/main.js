@@ -15,9 +15,7 @@ import OfflineScreen from './offline-screen';
 import MyWebView from './web-view';
 import LoginScreen from './login-screen';
 import Splash from './transitionScreens/splash-screen';
-import HomeScreen from './pages/home-screen';
-import SettingsScreen from './pages/setting-screen';
-import {Avaliacoes} from './centralAvaliacoesNavigator/avaliacoes';
+import ForgotPassword from './forgot-password';
 
 // Images
 import sadBot from '../assets/sad-bot.png';
@@ -51,9 +49,8 @@ export default Main = () => {
     
     // States
     const [isLoading, setIsLoading] = useState(true);
-    const { authState, navigatorState } = useContext(Context);
+    const { authState } = useContext(Context);
     const [auth, setAuth] = authState;
-    const [navigator, setNavigator] = navigatorState;
 
     // Get Net Info
     let netInfo = useNetInfo();
@@ -149,28 +146,15 @@ export default Main = () => {
             >
                 {/* Unauthenticated Screens */}
                 {!auth &&
-                    <Tab.Screen
-                    name="LoginScreen"
-                    component={LoginScreen}
-                    options={{
-                        headerShown: false,
-                        animationTypeForReplace: 'pop', // : 'push',
-                    }}
-                    />
-                }
-                {/* Main App Screens */}
-                {auth && navigator === 'main' &&
                 <>
-                    <Tab.Screen name={'Home'} component={HomeScreen} options={{headerShown: false}}/>
-                    <Tab.Screen name={'Settings'} component={SettingsScreen} options={{headerShown: false}}/>
-                    <Tab.Screen name={'WebView'} component={MyWebView} options={{headerShown: false}}/>
-                    
+                    <Tab.Screen name={'LoginScreen'} component={LoginScreen} options={{headerShown: false}}/>
+                    <Tab.Screen name={'ForgotPassword'} component={ForgotPassword} options={{headerShown: false}}/>
                 </>
                 }
-                {/* Central de Avaliações */}
-                {auth && navigator === 'avaliacoes' &&
+                {/* Main App Screens */}
+                {auth &&
                 <>
-                    <Tab.Screen name={'Avaliacoes'} component={Avaliacoes} options={{headerShown: false}}/>
+                    <Tab.Screen name={'WebView'} component={MyWebView} options={{headerShown: false}}/>
                 </>
                 }
             </Tab.Navigator>

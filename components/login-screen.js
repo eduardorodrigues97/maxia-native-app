@@ -5,7 +5,7 @@ import { Card, Button } from "react-native-elements";
 import { SvgXml } from 'react-native-svg';
 import { React, useRef, useState, useEffect, useContext } from 'react';
 import * as SecureStore from 'expo-secure-store';
-import { AuthContext } from './auth-context'
+import { Context } from './context'
 // import Splash from './transitionScreens/splash-screen';
 
 const Hr = (props) => {
@@ -39,7 +39,8 @@ export default function LoginScreen({navigation}) {
     const [password, setPassword] = useState('')
     const [status, setStatus] = useState(1);
     const [isRequesting, setIsRequesting] = useState(false);
-    const [auth, setAuth] = useContext(AuthContext);
+    const { authContext } = useContext(Context);
+    const [auth, setAuth] = authContext;
 
     // Set Refs
     const emailInput = useRef();

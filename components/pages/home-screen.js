@@ -1,12 +1,15 @@
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import Constants from 'expo-constants';
-import { Card } from "react-native-elements";
+import { Card, colors } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
 import { React } from 'react';
 import SelectDropdown from 'react-native-select-dropdown'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import EStyleSheet from 'react-native-extended-stylesheet';
+
+import { general } from '../../assets/styles/general';
 
 // SVG
 import MaxiaSimpleLogo from '../../assets/home-screen/maxiaSimpleLogo.svg'
@@ -122,14 +125,9 @@ const Home = function({navigation}) {
 }
 
 
-const styles = StyleSheet.create({
+const styles = EStyleSheet.create({
     // Global Container
-    container: {
-        flex: 1,
-        paddingTop: Constants.statusBarHeight*1.4,
-        backgroundColor: '#fff',
-        paddingBottom: '10%'
-    },
+    ...general,
 
     // Views
     viewUsername: {
@@ -181,15 +179,6 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: 'Medium'
     },
-    textLogo: {
-        color: '#6f2282',
-        fontSize: 11.6,
-        marginTop: 5,
-        marginBottom: 0,
-        textAlign: 'center',
-        fontFamily: 'Bold',
-        letterSpacing: -0.3
-    },
     textUsername: {
         color: 'rgb(111, 34, 130)',
         fontSize: 14,
@@ -239,23 +228,23 @@ const styles = StyleSheet.create({
         marginTop: '7%'
     },
     textCentralAvaliacoes: {
-        color: 'rgb(0, 157, 204)',
-        fontSize: 16,
+        color: '$colors.lightBlue',
+        fontSize: '$fonts.medium',
         padding: 0,
         textAlign: 'left',
-        marginLeft: '3%',
+        marginLeft: '$metrics.bigMargin',
         fontFamily: 'Regular',
-        marginTop: '5%',
+        marginTop: '$metrics.veryBigMargin',
         textDecorationLine: 'underline'
     },
     textSede: {
-        color: 'rgb(73, 73, 73)',
-        fontSize: 20,
+        color: '$colors.black',
+        fontSize: '$fonts.big',
         padding: 0,
         textAlign: 'left',
-        marginLeft: '3%',
+        marginLeft: '$metrics.bigMargin',
         fontFamily: 'Bold',
-        marginTop: '0.5%'
+        marginTop: '$metrics.smallMargin'
     },
     textDropDown: {
         fontSize: 16,

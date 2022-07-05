@@ -5,7 +5,19 @@ import { React } from 'react';
 // Component imports
 import Main from './components/main';
 
-import { StateProvider } from './components/auth-context';
+// Global Context
+import { StateProvider } from './components/context';
+
+// Global Stylesheet building
+import EStyleSheet from 'react-native-extended-stylesheet';
+import { styles } from './assets/styles/general'
+
+EStyleSheet.build({
+    // GLobal variables
+    $colors: styles.colors,
+    $fonts: styles.fonts,
+    $metrics: styles.metrics
+});
 
 export default App = () => {
     return (

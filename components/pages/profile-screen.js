@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import { Card, Button } from "react-native-elements";
 import { SvgXml, SvgUri } from 'react-native-svg';
 import { React, useContext } from 'react';
-import { AuthContext } from '../auth-context'
+import { Context } from '../context'
 import * as SecureStore from 'expo-secure-store';
 
 const Hr = (props) => {
@@ -31,7 +31,8 @@ async function save(key, value) {
 }
 
 export default ProfileScreen = function({navigation}) {
-    const [auth, setAuth] = useContext(AuthContext);
+    const { authContext } = useContext(Context);
+    const [auth, setAuth] = authContext;
 
     return (
         <View style={styles.container}>

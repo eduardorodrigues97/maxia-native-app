@@ -16,7 +16,7 @@ import MyWebView from './web-view';
 import LoginScreen from './login-screen';
 import Splash from './transitionScreens/splash-screen';
 import HomeScreen from './pages/home-screen';
-import OtherScreen from './pages/other-screen';
+import Avaliacoes from './avaliacoes';
 import SettingsScreen from './pages/setting-screen';
 
 // Images
@@ -28,7 +28,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import { AuthContext } from './auth-context';
+import { Context } from './context';
 
 
 const Tab = createBottomTabNavigator();
@@ -51,7 +51,9 @@ export default Main = () => {
 
     // States
     const [isLoading, setIsLoading] = useState(true);
-    const [auth, setAuth] = useContext(AuthContext);
+    const { authContext, navigationContext } = useContext(Context)
+    const [auth, setAuth] = authContext;
+    const [navigationStatus, setNavigationStatus] = navigationContext;
 
     // Get Net Info
     let netInfo = useNetInfo();
@@ -108,8 +110,8 @@ export default Main = () => {
                         if (rn === 'Home') {
                             iconName = focused ? 'home' : 'home-outline';
                         }
-                        if (rn === 'Other') {
-                            iconName = focused ? 'list' : 'list-outline';
+                        if (rn === 'Avaliacoes') {
+                            iconName = focused ? 'settings' : 'settings-outline';
                         }
                         if (rn === 'Settings') {
                             iconName = focused ? 'settings' : 'settings-outline';
@@ -154,13 +156,15 @@ export default Main = () => {
                     />
                 }
                 {/* Authenticated Screens */}
-                {auth &&
+                {auth && navigationStatus !== 'CentralAvaliacoes' &&
                 <>
                     <Tab.Screen name={'Home'} component={HomeScreen} options={{headerShown: false}}/>
-                    <Tab.Screen name={'Other'} component={OtherScreen} options={{headerShown: false}}/>
                     <Tab.Screen name={'Settings'} component={SettingsScreen} options={{headerShown: false}}/>
                     <Tab.Screen name={'WebView'} component={MyWebView} options={{headerShown: false}}/>
                 </>
+                }
+                {auth && navigationStatus === 'CentralAvaliacoes' &&
+                    <Tab.Screen name={'Avaliacoes'} component={Avaliacoes} options={{headerShown: false}}/>
                 }
             </Tab.Navigator>
         </NavigationContainer>

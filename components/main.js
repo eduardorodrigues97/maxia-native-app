@@ -3,6 +3,8 @@
 
 import * as React from 'react';
 import { useEffect, useState, useContext } from 'react';
+import { Modal } from 'react-native-paper';
+import { View } from 'react-native';
 import { useNetInfo } from "@react-native-community/netinfo";
 import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
@@ -29,10 +31,20 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import { Context } from './context';
+import { general } from '../assets/styles/general';
 
 
 const Tab = createBottomTabNavigator();
 
+const MyModal = (props) => {
+    return (
+        <Modal visible={props.modalVisible} onDismiss={()=>props.setModalVisible(false)} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
+            <View style={general.viewModal}>
+                {props.children}
+            </View>
+        </Modal>
+    )
+}
 
 export default Main = () => {
     // Load Fonts
@@ -51,9 +63,10 @@ export default Main = () => {
 
     // States
     const [isLoading, setIsLoading] = useState(true);
-    const { authContext, navigationContext } = useContext(Context)
+    const { authContext, navigationContext, modalContext } = useContext(Context)
     const [auth, setAuth] = authContext;
     const [navigationStatus, setNavigationStatus] = navigationContext;
+    const [modalChildren, setModalChildren, modalVisible, setModalVisible] = modalContext;
 
     // Get Net Info
     let netInfo = useNetInfo();
@@ -95,10 +108,12 @@ export default Main = () => {
     if (netInfo.isConnected === false){
         return OfflineScreen()
     }
-
+    // return <Splash />
     return (
-        isLoading ?
+        <>
+        {isLoading ?
         <Splash /> :
+        <>
         <NavigationContainer>
             <Tab.Navigator
                 screenOptions={
@@ -168,5 +183,8 @@ export default Main = () => {
                 }
             </Tab.Navigator>
         </NavigationContainer>
+        <MyModal modalVisible={modalVisible} setModalVisible={setModalVisible}>{modalChildren}</MyModal>
+        </>}
+        </>
     )
 }

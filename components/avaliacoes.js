@@ -1,16 +1,16 @@
-import { React, useState } from 'react';
+import { React, useState, useContext } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
-// import Modal from "react-native-modal";
 import { Card, Button } from 'react-native-elements';
 import { Header, Hr } from './helper'
 import { SvgUri } from 'react-native-svg';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import { general } from '../assets/styles/general';
-import { Modal } from 'react-native-paper';
+
+import { Context } from './context';
 
 const HomologacaoCard = (props) => {
     const { homologacao='1', serie='-', ciclo='-', data_disponivel='-', status='3',
-    data_atualizacao='-', autor='-', setModalVisible } = props;
+    data_atualizacao='-', autor='-', setModalVisible, setModalChildren } = props;
     const statusTexts = ['', 'Validação da avaliação concluída', 'Em andamento', 'Não iniciada']
     return (
         <Card containerStyle={styles.card}>
@@ -54,30 +54,10 @@ const HomologacaoCard = (props) => {
                 style={styles.buttonStyle}
                 onPress={() => {
                     setModalVisible(true);
+                    setModalChildren(<Text>TEXTOTEXTO</Text>)
                 }}
             />
         </Card>
-    )
-}
-
-const MyModal = (props) => {
-    return (
-        // <Modal
-        //     animationType="slide"
-        //     transparent={true}
-        //     visible={props.modalVisible}
-        //     onBackdropPress={() => props.setModalVisible(false)}
-        //     backdropColor={'black'}
-        //     backdropOpacity={0.7}
-        //     onRequestClose={() => {
-        //         props.setModalVisible(false);
-        //     }}
-        // >
-        <Modal visible={props.modalVisible} onDismiss={()=>props.setModalVisible(false)} contentContainerStyle={{backgroundColor: 'white', padding: 20}}>
-            <View style={styles.viewModal}>
-                {props.children}
-            </View>
-        </Modal>
     )
 }
 
@@ -111,14 +91,12 @@ const Main = () => {
             autor:'Cronaldo'
         }
     ]
-    const [modalVisible, setModalVisible] = useState(false);
 
+    const { modalContext } = useContext(Context)
+    const [modalChildren, setModalChildren, modalVisible, setModalVisible] = modalContext;
     return (
         <>
-        
-        
         <Header />
-
         <ScrollView style={styles.scrollViewMain}>
             <Text style={styles.textTitle}>Laboratório de Provas</Text>
             <Text style={styles.textGeneral}>O melhor lugar para elaborar suas provas</Text>
@@ -126,18 +104,9 @@ const Main = () => {
             <Text style={styles.textTitle2}>Provas em produção</Text>
             <Text style={styles.textWrap}>O jeito mais rápido e simples de elaborar sua prova.</Text>
 
-            {cards.map((item, index)=> <HomologacaoCard {...item} key={index} setModalVisible={setModalVisible}/>)}
+            {cards.map((item, index)=> <HomologacaoCard {...item} key={index} setModalVisible={setModalVisible} setModalChildren={setModalChildren} />)}
 
         </ScrollView>
-
-        <MyModal modalVisible={modalVisible} setModalVisible={setModalVisible}>
-            <Text>ALOALAOLAO</Text>
-            <Text>ALOALAOLAO</Text>
-            <Text>ALOALAOLAO</Text>
-            <Text>ALOALAOLAO</Text>
-            <Text>ALOALAOLAO</Text>
-            <Text>ALOALAOLAO</Text>
-        </MyModal>
         </>
     )
 }
@@ -184,21 +153,7 @@ const styles = EStyleSheet.create({
         backgroundColor: 'black',
         opacity: 0.2
     },
-    viewModal: {
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
+    
     
 
     // Text

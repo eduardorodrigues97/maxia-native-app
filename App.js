@@ -7,6 +7,7 @@ import Main from './components/main';
 
 // Global Context
 import { StateProvider } from './components/context';
+import { Provider } from 'react-native-paper';
 
 // Global Stylesheet building
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -22,7 +23,9 @@ EStyleSheet.build({
 export default App = () => {
     return (
         <StateProvider>
-            <Main />
+            <Provider>
+                <Main />
+            </Provider>
         </StateProvider>
     )
 }

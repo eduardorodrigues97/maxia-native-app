@@ -1,8 +1,7 @@
 {
   "expo": {
-    "name": "Experiência Professor WebView",
-    "slug": "experiencia-professor-web-view",
-    "owner": "maxia",
+    "name": "Max.ia Professor",
+    "slug": "maxia-professor",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,7 +28,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.luizjosebp.maxiatesteprofessor"
+      "package": "education.maxia.professor",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

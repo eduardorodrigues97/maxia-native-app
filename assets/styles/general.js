@@ -115,6 +115,7 @@ const general = {
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.1,
         shadowRadius: 1,
+        zIndex: 10
     },
     viewHeader: {
         justifyContent: 'space-between',

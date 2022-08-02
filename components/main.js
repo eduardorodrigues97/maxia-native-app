@@ -10,6 +10,7 @@ import { OrientationLock } from 'expo-screen-orientation';
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import { useFonts } from 'expo-font';
 import { Asset } from 'expo-asset';
+import { SvgUri } from 'react-native-svg';
 import * as SecureStore from 'expo-secure-store';
 
 // Component imports
@@ -18,8 +19,15 @@ import MyWebView from './web-view';
 import LoginScreen from './login-screen';
 import Splash from './transitionScreens/splash-screen';
 import HomeScreen from './pages/home-screen';
-import Avaliacoes from './avaliacoes';
 import SettingsScreen from './pages/setting-screen';
+import VisualizarItem from './visualizacao-item';
+
+// Central Avaliações
+import Avaliacoes from './avaliacoes';
+import Agendadas from './agendadas';
+import Config from './screens/config/config';
+import Resultados from './screens/resultados/resultados';
+
 
 // Images
 import sadBot from '../assets/sad-bot.png';
@@ -108,7 +116,72 @@ export default Main = () => {
     if (netInfo.isConnected === false){
         return OfflineScreen()
     }
-    // return <Splash />
+
+    const screen_options = (route) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            let rn = route.name;
+    
+            // CENTRAL DE AVALIAÇÕES
+            if (rn === 'Avaliacoes') {
+                return <SvgUri
+                width={28} height={28} color={focused ? '#009dcc': 'gray'}
+                uri={'http://teste.maxia.education/packs/media/svg-new/icon-avaliacoes-8dcc37fd.svg'} />
+            }
+            if (rn === 'Agendadas') {
+                return <SvgUri
+                width={28} height={28} color={focused ? '#009dcc': 'gray'}
+                uri={'http://teste.maxia.education/packs/media/svg-new/icon-agendadas-ff5abe29.svg'} />
+            }
+            if (rn === 'Resultados') {
+                return <SvgUri
+                width={28} height={28} color={focused ? '#009dcc': 'gray'}
+                uri={'http://teste.maxia.education/packs/media/svg-new/icon-resultados-7fb32e3c.svg'} />
+            }
+            if (rn === 'Config') {
+                return <SvgUri
+                width={28} height={28} color={focused ? '#009dcc': 'gray'}
+                uri={'http://teste.maxia.education/packs/media/svg-new/icon-settings-ee457f27.svg'} />
+            }
+    
+            // INITIAL
+            if (rn === 'Home') {
+                iconName = focused ? 'home' : 'home-outline';
+            }
+            if (rn === 'Settings') {
+                iconName = focused ? 'settings' : 'settings-outline';
+            }
+            if (rn === 'WebView') {
+                iconName = focused ? 'desktop' : 'desktop-outline';
+            }
+            if (rn === 'VisualizarItem') {
+                iconName = focused ? 'desktop' : 'desktop-outline';
+            }
+    
+            // You can return any component that you like here!
+            return <Ionicons name = {iconName} size={size} color={color} />;
+        },
+        tabBarActiveTintColor: '#009dcc',
+        tabBarInactiveTintColor: '#AFAFAF',
+        tabBarLabelStyle: { 
+            paddingBottom: 10,
+            fontSize: 16,
+            textAlign: 'center',
+            fontFamily: 'Medium'
+        },
+        tabBarStyle: {
+            padding: 10,
+            height: 70,
+            borderTopEndRadius: 20,
+            borderTopStartRadius: 20,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 0 },
+            shadowOpacity: 0.2,
+            shadowRadius: 4,
+            display: (!auth || route.name === 'WebView') ? 'none': 'block'
+        }
+    })
+
     return (
         <>
         {isLoading ?
@@ -116,48 +189,7 @@ export default Main = () => {
         <>
         <NavigationContainer>
             <Tab.Navigator
-                screenOptions={
-                ({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-                        let rn = route.name;
-
-                        if (rn === 'Home') {
-                            iconName = focused ? 'home' : 'home-outline';
-                        }
-                        if (rn === 'Avaliacoes') {
-                            iconName = focused ? 'settings' : 'settings-outline';
-                        }
-                        if (rn === 'Settings') {
-                            iconName = focused ? 'settings' : 'settings-outline';
-                        }
-                        if (rn === 'WebView') {
-                            iconName = focused ? 'desktop' : 'desktop-outline';
-                        }
-
-                        // You can return any component that you like here!
-                        return <Ionicons name = {iconName} size={size} color={color} />;
-                    },
-                    tabBarActiveTintColor: 'tomato',
-                    tabBarInactiveTintColor: 'rgb(196, 196, 196)',
-                    tabBarLabelStyle: { 
-                        paddingBottom: 10,
-                        fontSize: 16,
-                        textAlign: 'center',
-                        fontFamily: 'Medium'
-                    },
-                    tabBarStyle: {
-                        padding: 10,
-                        height: 70,
-                        borderTopEndRadius: 20,
-                        borderTopStartRadius: 20,
-                        shadowColor: '#000',
-                        shadowOffset: { width: 0, height: 0 },
-                        shadowOpacity: 0.2,
-                        shadowRadius: 4,
-                        display: (!auth || route.name === 'WebView') ? 'none': 'block'
-                    }
-                })}
+                screenOptions={({route}) => screen_options(route)}
             >
                 {/* Unauthenticated Screens */}
                 {!auth &&
@@ -179,7 +211,13 @@ export default Main = () => {
                 </>
                 }
                 {auth && navigationStatus === 'CentralAvaliacoes' &&
+                <>
                     <Tab.Screen name={'Avaliacoes'} component={Avaliacoes} options={{headerShown: false}}/>
+                    <Tab.Screen name={'Agendadas'} component={Agendadas} options={{headerShown: false}}/>
+                    <Tab.Screen name={'Resultados'} component={Resultados} options={{headerShown: false}}/>
+                    <Tab.Screen name={'Config'} component={Config} options={{headerShown: false}}/>
+                    {/* <Tab.Screen name={'VisualizarItem'} component={VisualizarItem} options={{headerShown: false}}/> */}
+                </>
                 }
             </Tab.Navigator>
         </NavigationContainer>

@@ -95,8 +95,6 @@ const Main = () => {
     const { modalContext } = useContext(Context)
     const [modalChildren, setModalChildren, modalVisible, setModalVisible] = modalContext;
     return (
-        <>
-        <Header />
         <ScrollView style={styles.scrollViewMain}>
             <Text style={styles.textTitle}>Laboratório de Provas</Text>
             <Text style={styles.textGeneral}>O melhor lugar para elaborar suas provas</Text>
@@ -107,7 +105,6 @@ const Main = () => {
             {cards.map((item, index)=> <HomologacaoCard {...item} key={index} setModalVisible={setModalVisible} setModalChildren={setModalChildren} />)}
 
         </ScrollView>
-        </>
     )
 }
 
@@ -115,7 +112,10 @@ const Avaliacoes = ({navigation}) => {
     return (
         <View style={styles.container}>
             <View style={styles.viewMain}>
+            <>
+                <Header />
                 <Main />
+            </>
             </View>
         </View>
     )

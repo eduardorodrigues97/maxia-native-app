@@ -35,7 +35,32 @@ const Hr = (props) => {
     )
 }
 
-export { Header, Hr };
+const HrNew = (props) => {
+    const {width = '100%'} = props;
+    return (
+        <View style={{
+            ...styles.hr,
+            width: width
+        }}></View>
+    )
+}
+
+const TextHr = (props) => {
+    return (
+        <View style={styles.viewTextHr}>
+            <View style={{flexGrow: 1}}>
+                <View style={{borderWidth: 2, marginRight: 15, opacity: 0.2}}></View>
+            </View>
+            {props.children}
+            <View style={{flexGrow: 1}}>
+                <View style={{borderWidth: 2, marginLeft: 15, opacity: 0.2}}></View>
+            </View>
+        </View>
+    )
+
+}
+
+export { Header, Hr, TextHr, HrNew };
 
 const styles = EStyleSheet.create({
     ...general,
@@ -48,6 +73,13 @@ const styles = EStyleSheet.create({
     viewSimpleMaxiaLogo: {
         padding: '$metrics.smallPadding',
         alignItems: 'flex-end'
+    },
+    viewTextHr: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '90%',
+        flex: 1
     },
 
     // Texts

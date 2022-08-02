@@ -18,8 +18,10 @@ export default App = () => {
     // Helper functions
     // URL change handler
     const onShouldStartLoadWithRequest = function(navigator) {
+        this.canGoBack = navigator.canGoBack;
         // Set new URL to state
-        
+        console.log(navigator.url)
+
         // INTERCEPT PDFs
         if (navigator.url.slice(-4) === '.pdf') {
             // setUrl(navigator.url);
@@ -51,13 +53,13 @@ export default App = () => {
                 uri: url,
                 // Settar os cookies tbm funciona! No nativo (release) vai ser possível salvar os
                 // cookies na localStorage e passar direto por aqui
-                headers: {
-                    // Limpar cookie de autenticação na abertura do WebView
-                    Cookie: '_maxia_session="none"'
-                },
+                // headers: {
+                //     // Limpar cookie de autenticação na abertura do WebView
+                //     Cookie: '_maxia_session="none"'
+                // },
             }}
             onShouldStartLoadWithRequest={onShouldStartLoadWithRequest} //for iOS
-            onNavigationStateChange ={onShouldStartLoadWithRequest} //for Android
+            // onNavigationStateChange ={onShouldStartLoadWithRequest} //for Android
             // injectedJavaScript={javascriptInjection}
             // javaScriptEnabled={true}
             sharedCookiesEnabled={true}

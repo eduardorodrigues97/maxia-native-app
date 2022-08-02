@@ -1,12 +1,13 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
 import { React, useRef, useState } from 'react';
-import { StyleSheet, Constants } from 'react-native';
+import { StyleSheet } from 'react-native';
+import Constants from 'expo-constants';
 
 // Component imports
 // import Main from './components/main';
 import { WebView } from 'react-native-webview';
-
+import * as WebBrowser from 'expo-web-browser';
 // import { StateProvider } from './components/context';
 
 export default App = () => {
@@ -68,7 +69,7 @@ export default App = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // marginTop: Constants.statusBarHeight,
+        marginTop: Constants.statusBarHeight,
         backgroundColor: 'rgb(248, 249, 250)'
     }
 });

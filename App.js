@@ -27,16 +27,16 @@ export default App = () => {
             return false;
         }
     
-        if (navigator.url === 'http://teste.maxia.education/users/sign_in' && url === 'http://teste.maxia.education/') {
-            webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
-            setIsLoading(true);
-            setAuth(false);
-            save('maxiaSessionToken', '');
-            save('email', '');
-            save('password', '');
-            setUrl(navigator.url);
-            return false;
-        }
+        // if (navigator.url === 'http://teste.maxia.education/users/sign_in' && url === 'http://teste.maxia.education/') {
+        //     webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
+        //     setIsLoading(true);
+        //     setAuth(false);
+        //     save('maxiaSessionToken', '');
+        //     save('email', '');
+        //     save('password', '');
+        //     setUrl(navigator.url);
+        //     return false;
+        // }
 
         setUrl(navigator.url);
         return true;

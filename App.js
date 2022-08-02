@@ -22,7 +22,7 @@ export default App = () => {
         
         // INTERCEPT PDFs
         if (navigator.url.slice(-4) === '.pdf') {
-            setUrl(navigator.url);
+            // setUrl(navigator.url);
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
             WebBrowser.openBrowserAsync(navigator.url)
             return false;

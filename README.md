@@ -20,4 +20,7 @@ Now, tap on the General section you will see the Internal App sharing option.
 
 * Configuração build local APK https://docs.expo.dev/classic/turtle-cli/
 
-* Get only APK eas build -p android --profile preview
+* Get only APK: eas build -p android --profile preview
+* Get .aab: eas build -p android
+
+* Icon generator: https://easyappicon.com/

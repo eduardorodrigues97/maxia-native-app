@@ -72,7 +72,7 @@ export default App = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: Constants.statusBarHeight,
+        // marginTop: Constants.statusBarHeight,
         backgroundColor: 'rgb(248, 249, 250)'
     }
 });

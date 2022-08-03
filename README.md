@@ -17,3 +17,7 @@ Open the play store app and tap on the side menu option present in the top right
 Tap on Settings.
 In the About section, just continuously tap the Play store version option for seven times.
 Now, tap on the General section you will see the Internal App sharing option.
+
+* Configuração build local APK https://docs.expo.dev/classic/turtle-cli/
+
+* Get only APK eas build -p android --profile preview

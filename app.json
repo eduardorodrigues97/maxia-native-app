@@ -2,7 +2,7 @@
   "expo": {
     "name": "Max.ia Professor",
     "slug": "maxia-professor",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/logo-maxia.png",
     "userInterfaceStyle": "light",
@@ -28,10 +28,10 @@
         "backgroundColor": "#f2f2f2"
       },
       "package": "education.maxia.professor",
-      "versionCode": 4
+      "versionCode": 5
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo-maxia.png"
     },
     "description": ""
   }

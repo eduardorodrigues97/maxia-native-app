@@ -4,13 +4,12 @@
     "slug": "maxia-professor",
     "version": "1.0.3",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo-maxia.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff",
-      "width": 200
+      "image": "./assets/splash-screen-maxia.png",
+      "backgroundColor": "#f2f2f2",
+      "resizeMode": "contain"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,8 +24,8 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "foregroundImage": "./assets/logo-maxia.png",
+        "backgroundColor": "#f2f2f2"
       },
       "package": "education.maxia.professor",
       "versionCode": 4

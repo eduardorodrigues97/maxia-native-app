@@ -5,7 +5,7 @@
     "version": "1.0.5",
     "owner": "maxia",
     "orientation": "portrait",
-    "icon": "./assets/maxia-icon-android/android/adaptive-android.png",
+    "icon": "./assets/maxia-icon-android/android/legacy-android.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash-screen-maxia.png",
@@ -25,7 +25,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/maxia-icon-android/android/adaptive-android.png",
+        "foregroundImage": "./assets/maxia-icon-android/android/legacy-android.png",
         "backgroundColor": "#f2f2f2"
       },
       "package": "education.maxia.professor",

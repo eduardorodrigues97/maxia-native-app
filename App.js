@@ -15,6 +15,7 @@ export default App = () => {
     // Define refs
     const webRef = useRef(null);
     const [url, setUrl] = useState('http://teste.maxia.education/');
+    const [statusBarBackgroundColor, setStatusBarBackgroundColor] = useState('#F2F2F2');
 
     // Helper functions
     // URL change handler
@@ -66,8 +67,11 @@ export default App = () => {
                 // javaScriptEnabled={true}
                 sharedCookiesEnabled={true}
                 onMessage={({ data }) => { return data }}
+                onLoadEnd={()=>{
+                    url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white")
+                }}
             />
-            <StatusBar style="dark" translucent={true} backgroundColor={url.includes('sign_in') ? '#F2F2F2' : 'white'} />
+            <StatusBar style="dark" translucent={true} backgroundColor={statusBarBackgroundColor} />
         </SafeAreaView>
     )
 }

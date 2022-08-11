@@ -32,6 +32,12 @@ export default App = () => {
             return false;
         }
 
+        // INTERCEPT first page and go directly to central de avaliacoes
+        if (navigator.url === 'http://teste.maxia.education/escolas/selecao_nivel') {
+            setUrl('http://teste.maxia.education/professores/avaliacao_producao');
+            return false;
+        }
+
         // if (navigator.url === 'http://teste.maxia.education/users/sign_in' && url === 'http://teste.maxia.education/') {
         //     webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
         //     setIsLoading(true);

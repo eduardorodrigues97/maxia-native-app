@@ -32,6 +32,7 @@ export default App = () => {
     const [url, setUrl] = useState('http://teste.maxia.education/');
     const [statusBarBackgroundColor, setStatusBarBackgroundColor] = useState('#F2F2F2');
     const [started, setStarted] = useState(0);
+    const [isConnected, setIsConnected] = useState(true);
 
     // Helper functions
     // URL change handler
@@ -60,16 +61,18 @@ export default App = () => {
 
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
 
-    let netInfo = useNetInfo();
+    // let netInfo = useNetInfo();
+    // hideSplashScreen()
+    // return (<OfflineScreen />)
 
     return (
         <>
-        {(netInfo.isConnected === false) &&
-        <OfflineScreen />
+        {(isConnected === false) &&
+        <OfflineScreen setIsConnected={setIsConnected} webViewRef={webRef} />
         }
         <SafeAreaView style={{
             ...styles.container,
-            display: (netInfo.isConnected === true) ? 'flex' : 'none'
+            display: (isConnected === true) ? 'flex' : 'none'
         }}>
             <WebView
                 ref={webRef}
@@ -88,11 +91,14 @@ export default App = () => {
                         setStarted(started+1);
                     }
                     if (started == 1) {
-                        hideSplashScreen();
+                        setTimeout(() => {
+                            hideSplashScreen();
+                        }, 1000);
                         setStarted(started+1);
                     }
                 }}
                 startInLoadingState
+                onError={({description}) => {setIsConnected(false);}}
             />
             <StatusBar style="dark" translucent={true} backgroundColor={statusBarBackgroundColor} />
         </SafeAreaView>

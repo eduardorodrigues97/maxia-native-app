@@ -24,3 +24,13 @@ Now, tap on the General section you will see the Internal App sharing option.
 * Get .aab: eas build -p android
 
 * Icon generator: https://easyappicon.com/
+
+
+### Generating keystore
+
+https://developer.android.com/studio/publish/app-signing
+
+path: keystores/android/upload-keystore.jks
+keystore password: ask Luiz or Eduardo
+
+Generate .pem: `expo fetch:android:upload-cert`

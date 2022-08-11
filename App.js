@@ -4,19 +4,29 @@ import { React, useRef, useState, useEffect } from 'react';
 import { StyleSheet } from 'react-native';
 
 // Component imports
+import OfflineScreen from './components/offline-screen';
+
 import { WebView } from 'react-native-webview';
 import * as WebBrowser from 'expo-web-browser';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { Asset } from 'expo-asset';
 
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
 import { useNetInfo } from "@react-native-community/netinfo";
+import { OrientationLock } from 'expo-screen-orientation';
+
+// Assets import
+import sadBot from './assets/sad-bot.png';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default App = () => {
+    // Load background assets that can be loaded on background
+    Asset.fromModule(sadBot).downloadAsync()
+
     // Define refs
     const webRef = useRef(null);
     const [url, setUrl] = useState('http://teste.maxia.education/');
@@ -71,7 +81,9 @@ export default App = () => {
                 sharedCookiesEnabled={true}
                 onMessage={({ data }) => { return data }}
                 onLoadEnd={()=>{
-                    url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white")
+                    if (started > 1) {
+                        url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white")
+                    }
                     if (started < 2) {
                         setStarted(started+1);
                     }

@@ -10,6 +10,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 
+import { useScreenOrientationLock } from '@use-expo/screen-orientation';
+import { useNetInfo } from "@react-native-community/netinfo";
+
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
@@ -45,17 +48,19 @@ export default App = () => {
         await SplashScreen.hideAsync();
     }
 
-    useEffect(() => {
-        setTimeout(() => {
-            if (!started) {
-                console.log("FAILED")
-            }
-        }, 5000);
-        return () => {};
-    }, []);
+    useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
+
+    let netInfo = useNetInfo();
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+        {(netInfo.isConnected === false) &&
+        <OfflineScreen />
+        }
+        <SafeAreaView style={{
+            ...styles.container,
+            display: (netInfo.isConnected === true) ? 'flex' : 'none'
+        }}>
             <WebView
                 ref={webRef}
                 source={{
@@ -79,6 +84,7 @@ export default App = () => {
             />
             <StatusBar style="dark" translucent={true} backgroundColor={statusBarBackgroundColor} />
         </SafeAreaView>
+        </>
     )
 }
 

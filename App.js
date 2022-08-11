@@ -1,7 +1,7 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
-import { React, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { React, useRef, useState, useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 
 // Component imports
 // import Main from './components/main';
@@ -11,11 +11,24 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 // import { StateProvider } from './components/context';
 
+import * as SplashScreen from 'expo-splash-screen';
+import SplashScreenFadeOut from './SplashScreen';
+
+// Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+
 export default App = () => {
     // Define refs
     const webRef = useRef(null);
     const [url, setUrl] = useState('http://teste.maxia.education/');
     const [statusBarBackgroundColor, setStatusBarBackgroundColor] = useState('#F2F2F2');
+
+    // SplashScreen defs
+    const [status, setStatus] = useState(1);
+
+    const hideSplashScreen = async () => {
+        await SplashScreen.hideAsync();
+    }
 
     // Helper functions
     // URL change handler
@@ -29,6 +42,12 @@ export default App = () => {
             // setUrl(navigator.url);
             webRef.current.stopLoading(); //Some reference to your WebView to make it stop loading that URL
             WebBrowser.openBrowserAsync(navigator.url)
+            return false;
+        }
+
+        // INTERCEPT first page and go directly to central de avaliacoes
+        if (navigator.url === 'http://teste.maxia.education/escolas/selecao_nivel') {
+            setUrl('http://teste.maxia.education/professores/avaliacao_producao');
             return false;
         }
 
@@ -48,7 +67,8 @@ export default App = () => {
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <>
+        <SafeAreaView style={{...styles.container, display: (status === 3) ? 'flex' : 'none'}}>
             <WebView
                 ref={webRef}
                 source={{
@@ -66,18 +86,31 @@ export default App = () => {
                 // injectedJavaScript={javascriptInjection}
                 // javaScriptEnabled={true}
                 sharedCookiesEnabled={true}
-                onMessage={({ data }) => { return data }}
+                // onMessage={({ data }) => { return data }}
                 onLoadEnd={()=>{
-                    url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white")
+                    url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white");
+                    // setAppIsReady(true);
+                    setStatus(2);
                 }}
+                // onLoadProgress={({nativeEvent})=>{console.log(nativeEvent.progress)}}
             />
-            <StatusBar style="dark" translucent={true} backgroundColor={statusBarBackgroundColor} />
+            <StatusBar style="dark" translucent={true} backgroundColor={(status === 3) ? statusBarBackgroundColor : 'transparent'} />
         </SafeAreaView>
+        {(status !== 3) && <SplashScreenFadeOut
+        onAnimationEnd={()=>{setStatus(3)}}
+        onAnimationStart={() => {hideSplashScreen()}}
+        status={status}
+        />
+        }
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        position: 'absolute',
+        width: '100%',
+        height: '100%'
     }
 });

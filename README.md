@@ -34,3 +34,5 @@ path: keystores/android/upload-keystore.jks
 keystore password: ask Luiz or Eduardo
 
 Generate .pem: `expo fetch:android:upload-cert`
+
+Workaround pra não commitar o google-services.json

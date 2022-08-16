@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Max.ia Professor",
-    "slug": "maxia-professor",
-    "version": "1.0.5",
+    "name": "Estudo das notificacoes",
+    "slug": "notifications-study",
+    "version": "1.0",
     "owner": "maxia",
     "orientation": "portrait",
     "icon": "./assets/maxia-logo-playstore.png",
@@ -29,11 +29,21 @@
         "backgroundColor": "#f2f2f2"
       },
       "package": "education.maxia.professor",
-      "versionCode": 6
+      "versionCode": 6,
+      "googleServicesFile": "./auth/google-services.json"
     },
     "web": {
       "favicon": "./assets/maxia-logo-playstore.png"
     },
-    "description": ""
+    "description": "",
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/maxia-logo-playstore.png",
+          "color": "#ffffff"
+        }
+      ]
+    ]
   }
 }

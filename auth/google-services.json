@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "820559846492",
+    "project_id": "maxia-professor",
+    "storage_bucket": "maxia-professor.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820559846492:android:a929b7b0ce66ccb182da99",
+        "android_client_info": {
+          "package_name": "education.maxia.professor"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820559846492-l8iu6rn9meirvpojt7gholih1ol2o52f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "education.maxia.professor",
+            "certificate_hash": "a1c13eab1c892afb636fa70d011c0c8cf57c10af"
+          }
+        },
+        {
+          "client_id": "820559846492-p7a5ftuf0ugdtbn6l7p77vsq3d28fe87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl0fG5falX1hCLom-T3TgP-Mq70v09HOg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820559846492-p7a5ftuf0ugdtbn6l7p77vsq3d28fe87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

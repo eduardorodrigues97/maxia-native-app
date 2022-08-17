@@ -1,7 +1,7 @@
 // https://github.com/eduardorodrigues97/maxia-native-app
 
 import { React, useRef, useState, useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, BackHandler } from 'react-native';
 
 // Component imports
 import OfflineScreen from './components/offline-screen';
@@ -14,7 +14,6 @@ import * as SplashScreen from 'expo-splash-screen';
 import { Asset } from 'expo-asset';
 
 import { useScreenOrientationLock } from '@use-expo/screen-orientation';
-import { useNetInfo } from "@react-native-community/netinfo";
 import { OrientationLock } from 'expo-screen-orientation';
 
 // Assets import
@@ -22,6 +21,15 @@ import sadBot from './assets/sad-bot.png';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+const cantGoBackUrls = [
+    'http://teste.maxia.education/',
+    'http://teste.maxia.education/escolas/selecao_nivel',
+    'http://teste.maxia.education/professores/avaliacao_producao',
+    'http://teste.maxia.education/users/sign_out',
+    'http://teste.maxia.education/users/sign_in'
+]
+
 
 export default App = () => {
     // Load background assets that can be loaded on background
@@ -33,7 +41,7 @@ export default App = () => {
     const [statusBarBackgroundColor, setStatusBarBackgroundColor] = useState('#F2F2F2');
     const [started, setStarted] = useState(0);
     const [isConnected, setIsConnected] = useState(true);
-
+    console.log(url)
     // Helper functions
     // URL change handler
     const onShouldStartLoadWithRequest = function (navigator) {
@@ -51,6 +59,11 @@ export default App = () => {
             return false;
         }
 
+        if ((navigator.url === 'http://teste.maxia.education/users/sign_in') & (url === 'http://teste.maxia.education/')) {
+            const RCTNetworking = require('react-native/Libraries/Network/RCTNetworking')
+            RCTNetworking.clearCookies(() => {})
+        }
+
         setUrl(navigator.url);
         return true;
     }
@@ -61,9 +74,36 @@ export default App = () => {
 
     useScreenOrientationLock(OrientationLock.PORTRAIT_UP);
 
-    // let netInfo = useNetInfo();
-    // hideSplashScreen()
-    // return (<OfflineScreen />)
+    useEffect(() => {
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
+            if ((cantGoBackUrls.includes(url)) ? false : true) {
+                webRef.current.goBack();
+                webRef.current.injectJavaScript('checkUrlChange();')
+                setTimeout(() => {
+                    webRef.current.reload();
+                }, 500)
+                return true;
+            }
+            return false;
+        });
+        return () => {
+            backHandler.remove();
+        };
+    }, [url]);
+
+    const injectJS =  `
+    let initialUrl = window.location.href;
+    let checkUrlChange = () => {
+        const currentUrl = window.location.href;
+        if(currentUrl !== initialUrl) {
+            alert("alert");
+            window.ReactNativeWebView.postMessage(currentUrl);
+            initialUrl = currentUrl;
+        }
+    }
+    alert('injetou');
+    `
+    
 
     return (
         <>
@@ -82,8 +122,13 @@ export default App = () => {
                 onShouldStartLoadWithRequest={onShouldStartLoadWithRequest} //for iOS
                 onNavigationStateChange={onShouldStartLoadWithRequest} //for Android
                 sharedCookiesEnabled={true}
-                onMessage={({ data }) => { return data }}
-                onLoadEnd={()=>{
+                onMessage={(event) => {
+                    console.log(Date.now())
+                    if (event.nativeEvent.data !== url) {
+                        setUrl(event.nativeEvent.data);
+                    }
+                }}
+                onLoadEnd={(syntheticEvent)=>{
                     if (started > 1) {
                         url.includes("sign_in") ? setStatusBarBackgroundColor("#F2F2F2") : setStatusBarBackgroundColor("white")
                     }
@@ -96,9 +141,17 @@ export default App = () => {
                         }, 1000);
                         setStarted(started+1);
                     }
+                    
+                    const { nativeEvent } = syntheticEvent;
+                    if (!nativeEvent.loading) {
+                        webRef.current.injectJavaScript(injectJS);
+                    }
                 }}
                 startInLoadingState
                 onError={({description}) => {setIsConnected(false);}}
+
+                javaScriptEnabled={true}
+                domStorageEnabled={true}
             />
             <StatusBar style="dark" translucent={true} backgroundColor={statusBarBackgroundColor} />
         </SafeAreaView>

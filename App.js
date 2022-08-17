@@ -78,10 +78,10 @@ export default App = () => {
         const backHandler = BackHandler.addEventListener('hardwareBackPress', function () {
             if ((cantGoBackUrls.includes(url)) ? false : true) {
                 webRef.current.goBack();
-                webRef.current.injectJavaScript('checkUrlChange();')
-                setTimeout(() => {
-                    webRef.current.reload();
-                }, 500)
+                // webRef.current.injectJavaScript('checkUrlChange();')
+                // setTimeout(() => {
+                //     webRef.current.reload();
+                // }, 700)
                 return true;
             }
             return false;
@@ -96,12 +96,11 @@ export default App = () => {
     let checkUrlChange = () => {
         const currentUrl = window.location.href;
         if(currentUrl !== initialUrl) {
-            alert("alert");
             window.ReactNativeWebView.postMessage(currentUrl);
             initialUrl = currentUrl;
         }
     }
-    alert('injetou');
+    setInterval(checkUrlChange, 50);
     `
     
 
@@ -123,9 +122,9 @@ export default App = () => {
                 onNavigationStateChange={onShouldStartLoadWithRequest} //for Android
                 sharedCookiesEnabled={true}
                 onMessage={(event) => {
-                    console.log(Date.now())
                     if (event.nativeEvent.data !== url) {
                         setUrl(event.nativeEvent.data);
+                        webRef.current.reload();
                     }
                 }}
                 onLoadEnd={(syntheticEvent)=>{
